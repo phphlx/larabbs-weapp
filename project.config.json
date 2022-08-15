@@ -1,13 +1,31 @@
 {
-  "description": "a WePY project",
-  "setting": {
-    "urlCheck": true,
-    "es6": false,
-    "postcss": false,
-    "minified": false
-  },
-  "compileType": "miniprogram",
-  "appid": "wx78707a492d56e2ea",
-  "projectname": "larabbs",
-  "miniprogramRoot": "./weapp"
+    "description": "a WePY project",
+    "setting": {
+        "urlCheck": true,
+        "es6": false,
+        "postcss": false,
+        "minified": false,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
+        },
+        "minifyWXSS": false,
+        "minifyWXML": false
+    },
+    "compileType": "miniprogram",
+    "appid": "wx78707a492d56e2ea",
+    "projectname": "larabbs",
+    "miniprogramRoot": "weapp/",
+    "libVersion": "2.25.3",
+    "srcMiniprogramRoot": "weapp/",
+    "packOptions": {
+        "ignore": [],
+        "include": []
+    },
+    "condition": {},
+    "editorSetting": {
+        "tabIndent": "insertSpaces",
+        "tabSize": 4
+    }
 }

@@ -1,11 +1,13 @@
+<style>
+
+</style>
 <template>
   <view class="container">
-    首页话题列表
+    wode
   </view>
 </template>
-
 <script>
-import wepy from '@wepy/core'
+  import wepy from '@wepy/core'
 
-wepy.page({})
+  wepy.page({})
 </script>
