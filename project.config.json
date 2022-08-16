@@ -17,7 +17,7 @@
     "appid": "wx78707a492d56e2ea",
     "projectname": "larabbs",
     "miniprogramRoot": "weapp/",
-    "libVersion": "2.25.3",
+    "libVersion": "2.25.2",
     "srcMiniprogramRoot": "weapp/",
     "packOptions": {
         "ignore": [],
