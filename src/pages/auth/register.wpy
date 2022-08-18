@@ -109,7 +109,7 @@ wepy.page({
   data: {
     // 表单
     form: {
-      phone: null,
+      phone: null
     },
     // 图片验证值
     captchaValue: null,
@@ -124,11 +124,11 @@ wepy.page({
     // 短信验证码 key 及过期时间
     verificationCode: {}
   },
-  onReady(){
+  onReady() {
     this.initValidator()
   },
   methods: {
-    initValidator(){
+    initValidator() {
       this.phoneValidatorInstance = new WeValidator({
         rules: {
           phone: {
@@ -194,7 +194,7 @@ wepy.page({
     // 响应获取图片验证码按钮点击事件
     async getCaptchaCode() {
       this.errors = {}
-      if(!this.phoneValidatorInstance.checkData(this.form)) {
+      if (!this.phoneValidatorInstance.checkData(this.form)) {
         return
       }
 
@@ -243,7 +243,6 @@ wepy.page({
         this.captchaModalShow = false
         // 手机输入框 disabled
         this.phoneDisabled = true
-
       } catch (err) {
         // 验证码错误提示
         this.getCaptchaCode()
@@ -291,7 +290,7 @@ wepy.page({
         // 跳转到我的页面
         setTimeout(async () => {
           wx.switchTab({
-            url: '/pages/user'
+            url: '/pages/users/me'
           })
         }, 2000)
       } catch (err) {
