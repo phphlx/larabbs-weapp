@@ -32,6 +32,10 @@ wepy.page({
     eventHub.$on('reply-deleted', (reply) => {
       this.resourceData = this.resourceData.filter((r) => r.id !== reply.id)
     })
+
+    eventHub.$on('reply-deleted', (reply) => {
+      this.resourceData = this.resourceData.filter((r) => r.id !== reply.id)
+    });
   },
   methods: {
     fetchData() {
