@@ -106,6 +106,7 @@ wepy.page({
     // 话题数据
     topic: null
   },
+  // 计算的属性
   computed: {
     ...mapGetters(['user', 'isLoggedIn']),
     // 是否可以删除话题
@@ -114,7 +115,7 @@ wepy.page({
         return false
       }
       // 当前用户是话题的发布者
-      return this.user.id === this.topic.user_id
+      return this.user.id === this.topic.user_id || this.$app.can('manage_contents')
     }
   },
   methods: {
