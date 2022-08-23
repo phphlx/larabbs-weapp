@@ -2,7 +2,7 @@ import store from '@/store'
 import wepy from '@wepy/core'
 
 // 服务器接口地址
-const host = 'http://larabbs.test/api/v1/'
+const host = API_URL
 
 const checkToken = async () => {
   // 从缓存中取出 Token
