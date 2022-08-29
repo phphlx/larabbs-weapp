@@ -11,7 +11,7 @@
     <div class="page__bd">
       <div class="page__bd login-wrap">
         <div class="weui-toptips weui-toptips_warn fadeIn" v-if="errorMessage">{{ errorMessage }}</div>
-        <div class="weui-cells__title">Larabbs 用户登录</div>
+        <div class="weui-cells__title">裂变推广 用户登录</div>
         <div class="weui-cells weui-cells_after-title">
           <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.username}">
             <div class="weui-cell__hd">
@@ -38,7 +38,7 @@
         </div>
 
         <div class="weui-cells__tips">
-          如果你还没有 Larabbs 用户可以
+          如果你还没有 裂变推广 用户可以
           <a url="/pages/auth/register">注册新用户</a>
         </div>
 

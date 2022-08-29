@@ -96,7 +96,7 @@ wepy.app({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: 'LaraBBS',
+    navigationBarTitleText: '裂变推广',
     navigationBarTextStyle: 'black'
   },
   tabBar: {
