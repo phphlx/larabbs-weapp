@@ -143,7 +143,7 @@ wepy.page({
 
       // 2 秒后返回上一页
       setTimeout(function() {
-        eventHub.$emit('topic-deleted', this.topic);
+        eventHub.$emit('topic-deleted', this.topic)
         wx.navigateBack()
       }, 2000)
     },
@@ -154,7 +154,7 @@ wepy.page({
       })
 
       let topic = topicResponse.data
-      topic.body = topic.body.replace(/\<img/gi, '<img style="max-width:100%;height:auto" ');
+      topic.body = topic.body.replace(/\<img/gi, '<img style="max-width:100%;height:auto" ')
       this.topic = topic
     }
   },
@@ -163,7 +163,7 @@ wepy.page({
 
     eventHub.$on('reply-created', (...args) => {
       this.loadTopic(options.id)
-    });
+    })
   },
   onShareAppMessage () {
     return {
@@ -174,6 +174,6 @@ wepy.page({
       // 图片为用户头像
       imageUrl: this.user.avatar
     }
-  },
+  }
 })
 </script>

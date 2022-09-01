@@ -94,7 +94,7 @@
 
 <script>
 import wepy from '@wepy/core'
-import {updateAvatar} from "@/api/user"
+import {updateAvatar} from '@/api/user'
 import store from '@/store'
 import { mapGetters } from '@wepy/x'
 import WeValidator from 'we-validator'
@@ -141,7 +141,7 @@ wepy.page({
           },
           email: {
             email: '邮箱格式不正确'
-          },
+          }
         },
         onMessage: (data) => {
           let errors = {}
@@ -168,7 +168,6 @@ wepy.page({
           icon: 'success',
           duration: 2000
         })
-
       } catch (err) {
         // 设置报错信息
         if (err.response.statusCode === 422) {
@@ -191,7 +190,6 @@ wepy.page({
         let responseData = JSON.parse(imageResponse.data)
 
         this.form = Object.assign({}, this.form, {'avatar': responseData.path, 'avatar_image_id': responseData.id})
-
       } catch (err) {}
     }
   }

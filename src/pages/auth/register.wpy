@@ -83,7 +83,7 @@ wepy.page({
     // 表单
     form: {},
     // 表单错误
-    errors: {},
+    errors: {}
   },
   onReady() {
     this.initValidator()

@@ -47,7 +47,7 @@ import wepy from '@wepy/core'
 import listRefresh from '@/mixins/list-refresh.js'
 import { getNotifications } from '@/api/notification'
 import store from '@/store'
-import { mapActions } from '@wepy/x';
+import { mapActions } from '@wepy/x'
 
 wepy.page({
   store,

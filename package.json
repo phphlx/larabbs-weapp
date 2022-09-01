@@ -17,6 +17,7 @@
   "author": "phphlx <phphlx@163.com>",
   "license": "MIT",
   "dependencies": {
+    "@vant/weapp": "^1.10.4",
     "@wepy/core": "^2.0.0-alpha.16",
     "@wepy/use-promisify": "^2.1.0",
     "@wepy/x": "^2.0.2",

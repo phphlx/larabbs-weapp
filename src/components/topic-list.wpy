@@ -62,7 +62,7 @@ import wepy from '@wepy/core'
 
 wepy.component({
   options: {
-    styleIsolation: 'apply-shared', // 组件启用样式隔离
+    styleIsolation: 'apply-shared' // 组件启用样式隔离
   },
   props: {
     // 父页面传入，请求参数

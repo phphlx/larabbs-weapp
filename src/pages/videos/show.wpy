@@ -1,0 +1,220 @@
+<style lang="less">
+.page {
+  background-color: #FFFFFF;
+}
+
+.video {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+}
+
+.slider-container {
+  position: fixed;
+  bottom: 60rpx;
+  width: 100%;
+}
+
+slider {
+  margin: 0;
+}
+
+.delete-video {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 80px;
+  right: 30px;
+}
+
+.edit-video {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 160px;
+  right: 30px;
+}
+</style>
+<template>
+  <div class="page">
+    <video class="video" id="1" loop="{{true}}" controls="{{false}}" autoplay="{{false}}"
+           src="{{video.video[0]['url']}}" bindplay="updatePlayState" bindtap="videoTap" bindtimeupdate="updateTime">
+    </video>
+    <div class="slider-container">
+      <slider bindchange="sliderChange" bindchanging="sliderChanging" step="1" block-size="0" value="{{sliderValue}}"
+              backgroundColor="#333" activeColor="#fff" block-color=""/>
+    </div>
+    <a url="/pages/videos/edit?id={{ video.id }}" v-if="canDelete">
+      <image src="/assets/images/edit.png" class="edit-video"/>
+    </a>
+    <image src="/assets/images/delete.png" class="delete-video" v-if="canDelete" @tap="deleteVideo"/>
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: '视频详情',
+usingComponents: {
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import {mapGetters} from '@wepy/x'
+import {getVideo, deleteVideo} from '@/api/video'
+import eventHub from '@/common/eventHub'
+
+wepy.page({
+  store,
+  data: {
+    // 数据
+    video: null,
+    playIndex: 1,
+    playing: false,
+    updateState: false, // 是否允许更新进度条
+    sliderValue: 0,
+    duration: 0,
+    videoLength: 0,
+    videoNow: 0
+  },
+  // 计算的属性
+  computed: {
+    ...mapGetters(['user', 'isLoggedIn']),
+    // 是否可以删除话题
+    canDelete() {
+      if (!this.isLoggedIn || !this.video) {
+        return false
+      }
+      // 当前用户是话题的发布者
+      return this.user.id === this.video.user_id || this.$app.can('manage_contents')
+    }
+  },
+  onLoad(options) {
+    this.loadVideo(options.id)
+
+    eventHub.$on('video-updated', (...args) => {
+      this.loadVideo(options.id)
+    })
+  },
+  methods: {
+    async deleteVideo() {
+      // 删除确认
+      const res = await wepy.wx.showModal({
+        title: '确认删除',
+        content: '您确认删除该视频吗',
+        confirmText: '删除',
+        cancelText: '取消'
+      })
+
+      // 用户点击取消后返回
+      if (!res.confirm) {
+        return
+      }
+
+      // 调用接口删除话题
+      const deleteResponse = await deleteVideo(this.video.id)
+
+      wx.showToast({
+        title: '删除成功',
+        icon: 'success'
+      })
+
+      // 2 秒后返回上一页
+      setTimeout(function () {
+        eventHub.$emit('video-deleted', this.video)
+        wx.navigateBack()
+      }, 2000)
+    },
+    // 获取数据
+    async loadVideo(id) {
+      const videoResponse = await getVideo(id, {
+        include: 'user'
+      })
+
+      this.video = videoResponse.data
+    },
+    async videoTap(e) { // 无语, 动态绑定 video.id 就不行, 真奇怪
+      let videoContext = wx.createVideoContext(this.playIndex + '', this) // 这里对应的视频id
+      if (this.playing) {
+        videoContext.pause()
+        this.playing = false
+        this.updateState = false
+      } else {
+        videoContext.play()
+        this.playing = true
+        this.updateState = true
+      }
+    },
+    async updatePlayState(e) {
+      this.playing = true
+    },
+    //拖动进度条触发事件
+    sliderChange(e) {
+      if (this.duration) {
+        let videoContextPrev = wx.createVideoContext(this.playIndex + '', this);
+        videoContextPrev.seek(e.$wx.detail.value / 100 * this.duration);
+        this.sliderValue = e.$wx.detail.value
+        this.updateState = true
+      }
+    },
+    sliderChanging(e) {
+      this.updateState = false //拖拽过程中，不允许更新进度条
+    },
+    updateTime(e) {
+      if (this.updateState) { //判断拖拽完成后才触发更新，避免拖拽失效
+        let sliderValue = e.$wx.detail.currentTime / e.$wx.detail.duration * 100;
+        let nowTime = new Date().getTime();
+        let exp = (e.$wx.detail.duration / 60) * 1000
+        let newTime = new Date(nowTime + exp * 60).getTime();
+        let time = (newTime - nowTime) / 1000;
+        // 获取天、时、分、秒
+        let day = parseInt(time / (60 * 60 * 24));
+        let hou = parseInt(time % (60 * 60 * 24) / 3600);
+        let min = parseInt(time % (60 * 60 * 24) % 3600 / 60);
+        let sec = parseInt(time % (60 * 60 * 24) % 3600 % 60);
+        let videoLength = {
+          day: this.timeFormat(day),
+          hou: this.timeFormat(hou),
+          min: this.timeFormat(min),
+          sec: this.timeFormat(sec)
+        }
+        let exp2 = (e.$wx.detail.currentTime / 60) * 1000
+        let newTime2 = new Date(nowTime + exp2 * 60).getTime();
+        let time2 = (newTime2 - nowTime) / 1000;
+        // 获取天、时、分、秒
+        let day2 = parseInt(time2 / (60 * 60 * 24));
+        let hou2 = parseInt(time2 % (60 * 60 * 24) / 3600);
+        let min2 = parseInt(time2 % (60 * 60 * 24) % 3600 / 60);
+        let sec2 = parseInt(time2 % (60 * 60 * 24) % 3600 % 60);
+        let videoNow = {
+          day: this.timeFormat(day2),
+          hou: this.timeFormat(hou2),
+          min: this.timeFormat(min2),
+          sec: this.timeFormat(sec2)
+        }
+        this.sliderValue = sliderValue
+        this.duration = e.$wx.detail.duration
+        this.videoLength = videoLength
+        this.videoNow = videoNow
+      }
+    },
+    // 倒计时
+    timeFormat(param) { //小于 10 的格式化函数
+      return param < 10 ? '0' + param : `${param}`;
+    }
+  },
+  onReady() {
+    this.updateState = true
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.video.shareTitle,
+      // 路径为话题详情路径
+      path: '/pages/videos/show?id=' + this.video.id,
+      // 图片为用户头像
+      imageUrl: this.video.shareImg[0]['url']
+    }
+  }
+})
+</script>

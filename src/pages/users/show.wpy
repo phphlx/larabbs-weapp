@@ -72,7 +72,6 @@ wepy.page({
     user: null
   },
   async onLoad(options) {
-
     const userResponse = await getUser(options.id)
 
     this.user = userResponse.data

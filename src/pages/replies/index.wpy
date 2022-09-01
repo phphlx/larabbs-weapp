@@ -18,7 +18,7 @@ usingComponents: {
 import wepy from '@wepy/core'
 import { getReplies } from '@/api/reply'
 import listRefresh from '@/mixins/list-refresh.js'
-import eventHub from "@/common/eventHub"
+import eventHub from '@/common/eventHub'
 
 wepy.page({
   mixins: [ listRefresh ],
@@ -35,15 +35,15 @@ wepy.page({
       this.page = 1
       this.noMoreData = false
       this.loadData(true)
-    });
+    })
 
     eventHub.$on('reply-deleted', (reply) => {
       this.resourceData = this.resourceData.filter((r) => r.id !== reply.id)
-    });
+    })
   },
   methods: {
     fetchData() {
-      return  getReplies(this.topicId, {
+      return getReplies(this.topicId, {
         page: this.page,
         include: 'user'
       })

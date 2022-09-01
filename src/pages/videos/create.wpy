@@ -1,0 +1,314 @@
+<style lang="less">
+.content {
+  height: 5.3em;
+}
+.error-message {
+  color: #E64340;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
+  border-radius: 50%;
+}
+.avatar-wrap {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.up-image{
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  margin-top: 20rpx;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.up-image>.list{
+  flex: 0 0 33.3333%;
+  margin-bottom: 20rpx;
+  position: relative;
+}
+.up-image>.list>image{
+  width: 150rpx;
+  height: 150rpx;
+  margin: auto;
+  border-radius: 6rpx;
+  box-shadow: 0rpx 8rpx 8rpx #ccc;
+}
+.up-image>.list>.delete{
+  position: absolute;
+  top: -10rpx;
+  right: 0;
+  background-color: #fc3901;
+  color: #fff;
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 100%;
+  font-size: 24rpx;
+  text-align: center;
+  line-height: 34rpx;
+}
+.up-tip{
+  font-size: 24rpx;
+  color: #999;
+  background-color: #fff;
+  padding: 0 30rpx 30rpx 30rpx;
+}
+.up-tip>text{
+  color: #fc3901;
+}
+</style>
+<template>
+  <div class="page__bd">
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.title}">标题</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.title}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入标题" name="title" v-model="form.title" />
+        </div>
+        <div v-if="errors.title" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.title" class="weui-cells__tips error-message">{{ errors.title[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.video}">视频 (文件超过 60M 请使用 handbrake 压缩)</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.video}">
+        <div class="weui-cell__bd">
+          <div class="avatar-wrap">
+            <van-uploader accept="video" file-list="{{ form.video }}" multiple="{{false}}" max-count="1"
+                          bind:after-read="uploadVideo" bind:delete="deleteVideo" />
+          </div>
+        </div>
+        <div v-if="errors.video" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.video" class="weui-cells__tips error-message">{{ errors.video[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">广告语</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.intro}">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea content" placeholder="请输入广告语" v-model="form.intro"></textarea>
+        </div>
+        <div v-if="errors.intro" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.intro" class="weui-cells__tips error-message">{{ errors.intro[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.qrcode}">二维码</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.qrcode}">
+        <div class="weui-cell__bd">
+          <div class="avatar-wrap">
+            <van-uploader accept="image" file-list="{{ form.qrcode }}" multiple="{{false}}" max-count="1"
+                          bind:after-read="uploadQrcode" bind:delete="deleteQrcode" />
+          </div>
+        </div>
+        <div v-if="errors.qrcode" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.qrcode" class="weui-cells__tips error-message">{{ errors.qrcode[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareTitle}">分享标题</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareTitle}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入分享标题" name="shareTitle" v-model="form.shareTitle" />
+        </div>
+        <div v-if="errors.shareTitle" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.shareTitle" class="weui-cells__tips error-message">{{ errors.shareImg[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareImg}">分享封面图 (宽高比 5:4)</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareImg}">
+        <div class="weui-cell__bd">
+          <div class="avatar-wrap">
+            <van-uploader accept="image" file-list="{{ form.shareImg }}" multiple="{{false}}" max-count="1"
+                          bind:after-read="uploadShareImg" bind:delete="deleteShareImg" />
+          </div>
+        </div>
+        <div v-if="errors.shareImg" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.shareImg" class="weui-cells__tips error-message">{{ errors.shareImg[0] }}</div>
+
+    <div class="weui-btn-area">
+      <button class="weui-btn" type="primary" @tap="submit">提交</button>
+    </div>
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: '制作视频裂变',
+usingComponents: {
+"van-uploader": "module:@vant/weapp/dist/uploader"
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import { mapGetters } from '@wepy/x'
+import {uploadImg, uploadVideo, createVideo} from '@/api/video'
+import eventHub from '@/common/eventHub'
+import WeValidator from 'we-validator'
+
+wepy.page({
+  store,
+  computed: {
+    // 用户信息
+    ...mapGetters(['isLoggedIn'])
+  },
+  data: {
+    form: {
+      video: [],
+      qrcode: [],
+      shareImg: []
+    },
+    errors: {}
+  },
+  onLoad(options) {
+    // 未登录跳转到登录页面
+    if (!this.isLoggedIn) {
+      wx.navigateTo({
+        url: '/pages/auth/login'
+      })
+    }
+  },
+  onReady() {
+    this.initValidator()
+  },
+  methods: {
+    initValidator() {
+      // 实例化
+      this.validatorInstance = new WeValidator({
+        multiCheck: true,
+        rules: {
+          title: {
+            required: true
+          },
+          video: {
+            required: true
+          },
+          intro: {
+            required: true
+          },
+          qrcode: {
+            required: true
+          },
+          shareTitle: {
+            required: true
+          },
+          shareImg: {
+            required: true
+          }
+        },
+        messages: {
+          title: {
+            required: '请输入标题'
+          },
+          video: {
+            required: '没有上传视频'
+          },
+          intro: {
+            required: '请输入广告语'
+          },
+          qrcode: {
+            required: '请上传二维码'
+          },
+          shareTitle: {
+            required: '请输入分享标题'
+          },
+          shareImg: {
+            required: '没有上传分享封面图'
+          }
+        },
+        onMessage: (data) => {
+          let errors = {}
+          Object.keys(data).map(function(key) {
+            errors[key] = [data[key].msg]
+          })
+
+          this.errors = errors
+        }
+      })
+    },
+    async uploadVideo(event) {
+      const { file } = event.$wx.detail
+      try {
+        let imageResponse = await uploadVideo(file.url)
+        let responseData = JSON.parse(imageResponse.data)
+        this.form.video = [{'url': responseData.path}]
+      } catch (err) {}
+    },
+    async deleteVideo (event) {
+      var index = event.$wx.detail.index
+      this.form.video.splice(index - 1, 1)
+    },
+    async uploadQrcode(event) {
+      const { file } = event.$wx.detail
+      try {
+        let imageResponse = await uploadImg(file.url)
+        let responseData = JSON.parse(imageResponse.data)
+        this.form.qrcode = [{'url': responseData.path}]
+      } catch (err) {}
+    },
+    async deleteQrcode (event) {
+      var index = event.$wx.detail.index
+      this.form.qrcode.splice(index - 1, 1)
+    },
+    async uploadShareImg(event) {
+      const { file } = event.$wx.detail
+      try {
+        let imageResponse = await uploadImg(file.url)
+        let responseData = JSON.parse(imageResponse.data)
+        this.form.shareImg = [{'url': responseData.path}]
+      } catch (err) {}
+    },
+    async deleteShareImg (event) {
+      var index = event.$wx.detail.index
+      this.form.shareImg.splice(index - 1, 1)
+    },
+    // 提交表单
+    async submit () {
+      this.errors = {}
+      if (!this.validatorInstance.checkData(this.form)) {
+        return
+      }
+
+      // 请求发布回复接口
+      let createResponse = await createVideo(this.form)
+
+      // 提示发布成功
+      wx.showToast({
+        title: '发布成功',
+        icon: 'success'
+      })
+
+      // 2 秒后返回上一页
+      setTimeout(function() {
+        eventHub.$emit('video-created', createResponse.data)
+        wx.navigateBack()
+      }, 2000)
+    }
+  }
+})
+</script>

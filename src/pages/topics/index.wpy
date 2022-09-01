@@ -106,7 +106,7 @@ wepy.page({
     // 当前的分类
     currentCategory: {},
     // 是否显示分类
-    categoryOpen: false,
+    categoryOpen: false
   },
   computed: {
     ...mapGetters(['unreadCount']),
@@ -139,7 +139,7 @@ wepy.page({
       }
 
       // 请求话题列表接口
-      return getTopics(params);
+      return getTopics(params)
     },
     async loadCategories() {
       // 从缓存中获取分类数据

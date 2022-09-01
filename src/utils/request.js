@@ -95,10 +95,18 @@ const uploadFile = async (url, options = {}, showLoading = true) => {
     return response
   }
 
-  wx.showModal({
-    title: '提示',
-    content: '服务器错误，请联系管理员或重试'
-  })
+  let responseData = JSON.parse(response.data)
+  if (response.statusCode === 422 && responseData.errors.video) {
+    wx.showModal({
+      title: '提示',
+      content: responseData.errors.video[0]
+    })
+  } else {
+    wx.showModal({
+      title: '提示',
+      content: '服务器错误，请联系管理员或重试'
+    })
+  }
 
   const error = new Error(response.data.message)
   error.response = response

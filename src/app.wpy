@@ -29,7 +29,7 @@ wepy.app({
   },
 
   async onLaunch() {
-    this.$store = this.$options.store;
+    this.$store = this.$options.store
     this.updateUnreadCount()
 
     setInterval(() => {
@@ -91,7 +91,11 @@ wepy.app({
     'pages/replies/index',
     'pages/replies/user-index',
     'pages/replies/create',
-    'pages/notifications/index'
+    'pages/notifications/index',
+    'pages/videos/user-index',
+    'pages/videos/show',
+    'pages/videos/create',
+    'pages/videos/edit'
   ],
   window: {
     backgroundTextStyle: 'light',
