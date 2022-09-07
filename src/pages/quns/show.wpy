@@ -1,0 +1,247 @@
+<style lang="less">
+.page {
+  background-color: #FFFFFF;
+}
+
+.avatar-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  display: block;
+  border-radius: 6px;
+}
+
+.name-wrap {
+  position: relative;
+}
+
+.name {
+  text-align: center;
+  margin-top: 3vh;
+  font-size: 20px;
+}
+
+.intro-wrap {
+  position: relative;
+}
+
+.intro {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 38vh;
+}
+
+.button-wrap {
+  margin-top: 4vh;
+}
+
+.topic-title {
+  padding: 15px;
+}
+
+.delete-button {
+  margin-top: 15px;
+}
+
+.replyer-avatar {
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.reply-diff {
+  background-color: #d8d8d8;
+}
+
+.delete-qun {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 80px;
+  right: 30px;
+}
+
+.edit-qun {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 160px;
+  right: 30px;
+}
+
+.mask {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vh;
+  left: 0;
+}
+
+.share {
+  width: 600rpx;
+  height: 100vh;
+}
+</style>
+<template>
+  <div class="container">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
+    <div class="page article js_show" tabindex="-1">
+      <article class="weui-article">
+        <div class="avatar-wrap">
+          <image :src="qun.avatar[0]['url']" class="avatar"></image>
+        </div>
+        <div class="name-wrap">
+          <div class="name">{{ qun.name }}({{ qun.num }})</div>
+        </div>
+        <div class="intro-wrap">
+          <div class="intro">{{ qun.intro }}</div>
+        </div>
+        <div class="button-wrap">
+          <button class="weui-btn weui-btn_primary" @tap="previewQrcode">加入群聊</button>
+        </div>
+      </article>
+    </div>
+
+    <a url="/pages/quns/edit?id={{ qun.id }}" v-if="canDelete">
+      <image src="/assets/images/edit.png" class="edit-qun"/>
+    </a>
+    <image src="/assets/images/delete.png" class="delete-qun" v-if="canDelete" @tap="deleteQun"/>
+  </div>
+  <div class="mask" v-if="showMask" style="height:{{mask.height}}px; top: {{mask.top}}px">
+    <div class="" style="color: white;">
+      <image src="/assets/images/share.png" class="share"></image>
+    </div>
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: '群 详情',
+usingComponents: {
+"datetime-diff": "~@/components/datetime-diff",
+"qun-create-link": "~@/components/qun-create-link",
+"navigation-bar": "~@/components/navigation-bar",
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import {mapGetters} from '@wepy/x'
+import eventHub from '@/common/eventHub'
+import {deleteQun, getQun} from '@/api/qun'
+
+wepy.page({
+  store,
+  data: {
+    navbar: {},
+    // 数据
+    qun: {},
+    showMask: false,
+    mask: {
+      top: '',
+      height: '',
+      default: true
+    }
+  },
+  // 计算的属性
+  computed: {
+    ...mapGetters(['user', 'isLoggedIn']),
+    // 是否可以删除话题
+    canDelete() {
+      if (!this.isLoggedIn || !this.qun) {
+        return false
+      }
+      // 当前用户是话题的发布者
+      return this.user.id === this.qun.user_id || this.$app.can('manage_contents')
+    }
+  },
+  async onShow() {
+    let res = await wx.getSystemInfo()
+
+    this.mask.height = res.windowHeight
+    this.mask.top = this.navbar.height
+  },
+  methods: {
+    async deleteQun() {
+      // 删除确认
+      const res = await wepy.wx.showModal({
+        title: '确认删除',
+        content: '您确认删除该群裂变吗',
+        confirmText: '删除',
+        cancelText: '取消'
+      })
+
+      // 用户点击取消后返回
+      if (!res.confirm) {
+        return
+      }
+
+      // 调用接口删除话题
+      const deleteResponse = await deleteQun(this.qun.id)
+
+      wx.showToast({
+        title: '删除成功',
+        icon: 'success'
+      })
+
+      // 2 秒后返回上一页
+      setTimeout(function () {
+        eventHub.$emit('qun-deleted', this.qun)
+        wx.navigateBack()
+      }, 2000)
+    },
+    // 获取数据
+    async loadQun(id) {
+      const qunResponse = await getQun(id, {
+        include: 'user'
+      })
+
+      this.qun = qunResponse.data
+    },
+    async previewQrcode() {
+      if (this.mask.default) {
+        await setTimeout(() => {
+          wx.previewImage({
+            urls: [this.qun.qrcode[0]['url']]
+          })
+          this.showMask = false
+          this.mask.default = false
+        }, 8000)
+        // todo 分享两次? 裂变次数达到后不显示蒙层?
+        this.showMask = true
+      } else {
+        wx.previewImage({
+          urls: [this.qun.qrcode[0]['url']]
+        })
+      }
+    }
+  },
+  onLoad(options) {
+    this.loadQun(options.id)
+
+    eventHub.$on('qun-updated', (qun) => {
+      this.loadQun(options.id)
+    })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = ''
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.qun.shareTitle,
+      // 路径为话题详情路径
+      path: '/pages/quns/show?id=' + this.qun.id,
+      // 图片为用户头像
+      imageUrl: this.qun.shareImg[0]['url']
+    }
+  }
+})
+</script>

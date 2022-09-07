@@ -1,5 +1,7 @@
 <template>
   <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
     <topic-list :topics="resourceData" :no-more-data ="noMoreData"></topic-list>
   </div>
 </template>
@@ -8,7 +10,8 @@
 navigationBarTitleText: 'Ta 发布的话题',
 enablePullDownRefresh: true,
 usingComponents: {
-"topic-list": "~@/components/topic-list"
+"topic-list": "~@/components/topic-list",
+"navigation-bar": "~@/components/navigation-bar",
 }
 }
 </config>
@@ -21,6 +24,7 @@ import eventHub from '@/common/eventHub'
 wepy.page({
   mixins: [listRefresh],
   data: {
+    navbar: {},
     // 用户 id
     userId: 0
   },
@@ -32,6 +36,11 @@ wepy.page({
       this.noMoreData = false
       this.loadData(true)
     })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = 'Ta 发布的话题'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   methods: {
     async fetchData() {

@@ -5,6 +5,8 @@
 </style>
 <template>
   <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
     <div class="weui-cells__title">评论内容</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell">
@@ -22,6 +24,9 @@
 <config>
 {
 navigationBarTitleText: '添加回复',
+usingComponents: {
+"navigation-bar": "~@/components/navigation-bar",
+}
 }
 </config>
 <script>
@@ -38,6 +43,7 @@ wepy.page({
     ...mapGetters(['isLoggedIn'])
   },
   data: {
+    navbar: {},
     // 回复的话题id
     topicId: 0,
     content: ''
@@ -50,6 +56,11 @@ wepy.page({
       })
     }
     this.topicId = options.topic_id
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '添加回复'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   methods: {
     // 提交表单

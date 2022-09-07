@@ -21,6 +21,8 @@
 <template>
   <div class="page">
     <div class="page__bd" >
+      <navigation-bar :navbar="navbar"></navigation-bar>
+
       <div class="weui-cells weui-cells_after-title">
         <div class="weui-cell">
           <div class="weui-cell__bd ">
@@ -58,7 +60,8 @@
 <config>
 {
 usingComponents: {
-"datetime-diff": "~@/components/datetime-diff"
+"datetime-diff": "~@/components/datetime-diff",
+"navigation-bar": "~@/components/navigation-bar",
 }
 }
 </config>
@@ -68,6 +71,7 @@ import { getUser } from '@/api/user'
 
 wepy.page({
   data: {
+    navbar: {},
     // 用户数据
     user: null
   },
@@ -80,6 +84,11 @@ wepy.page({
     wx.setNavigationBarTitle({
       title: this.user.name + ' 的主页'
     })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = this.user.name + ' 的主页'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   }
 })
 </script>

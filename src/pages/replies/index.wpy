@@ -1,7 +1,9 @@
 <template>
   <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
     <reply-list :replies="resourceData" :no-more-data ="noMoreData"></reply-list>
-    <reply-create-link :topicId="topic.id"></reply-create-link>
+    <reply-create-link :topicId="topicId"></reply-create-link>
   </div>
 </template>
 <config>
@@ -10,7 +12,8 @@ navigationBarTitleText: '回复列表',
 enablePullDownRefresh: true,
 usingComponents: {
 "reply-list": "~@/components/reply-list",
-"reply-create-link": "~@/components/reply-create-link"
+"reply-create-link": "~@/components/reply-create-link",
+"navigation-bar": "~@/components/navigation-bar",
 }
 }
 </config>
@@ -23,6 +26,7 @@ import eventHub from '@/common/eventHub'
 wepy.page({
   mixins: [ listRefresh ],
   data: {
+    navbar: {},
     // 话题 id
     topicId: 0
   },
@@ -40,6 +44,11 @@ wepy.page({
     eventHub.$on('reply-deleted', (reply) => {
       this.resourceData = this.resourceData.filter((r) => r.id !== reply.id)
     })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '回复列表'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   methods: {
     fetchData() {

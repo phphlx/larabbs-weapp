@@ -30,6 +30,7 @@
 <template>
   <div class="page">
     <div class="page__bd">
+      <navigation-bar :navbar="navbar"></navigation-bar>
       <div class="weui-cells weui-cells_after-title">
         <a open-type="redirect" class="weui-cell weui-cell_access" url="/pages/users/show?id={{ topic.user.id }}">
           <div class="weui-cell__hd avatar-wrap">
@@ -89,7 +90,8 @@
 navigationBarTitleText: '话题详情',
 usingComponents: {
 "datetime-diff": "~@/components/datetime-diff",
-"reply-create-link": "~@/components/reply-create-link"
+"reply-create-link": "~@/components/reply-create-link",
+"navigation-bar": "~@/components/navigation-bar",
 }
 }
 </config>
@@ -104,7 +106,8 @@ wepy.page({
   store,
   data: {
     // 话题数据
-    topic: null
+    topic: null,
+    navbar: {}
   },
   // 计算的属性
   computed: {
@@ -164,6 +167,11 @@ wepy.page({
     eventHub.$on('reply-created', (...args) => {
       this.loadTopic(options.id)
     })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '话题详情'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   onShareAppMessage () {
     return {

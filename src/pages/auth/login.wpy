@@ -9,6 +9,8 @@
 <template>
   <div class="page">
     <div class="page__bd">
+      <navigation-bar :navbar="navbar"></navigation-bar>
+
       <div class="page__bd login-wrap">
         <div class="weui-toptips weui-toptips_warn fadeIn" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="weui-cells__title">裂变推广 用户登录</div>
@@ -52,6 +54,9 @@
 <config>
 {
 navigationBarTitleText: '登录',
+usingComponents: {
+"navigation-bar": "~@/components/navigation-bar",
+}
 }
 </config>
 <script>
@@ -62,12 +67,19 @@ import WeValidator from 'we-validator'
 wepy.page({
   store,
   data: {
+    navbar: {},
     // 用户名
     form: {},
     // 是否有错
     errors: {},
     // 错误信息
     errorMessage: ''
+  },
+  onLoad() {
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '登录'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   onReady() {
     this.initValidator()

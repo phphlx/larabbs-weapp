@@ -28,20 +28,20 @@
 
     <div class="weui-panel weui-panel_access">
       <div class="weui-panel__bd">
-        <div v-for="video in resourceData" :key="video.id">
-          <a url="/pages/videos/show?id={{video.id}}" class="weui-media-box weui-media-box_appmsg"
+        <div v-for="qun in resourceData" :key="qun.id">
+          <a url="/pages/quns/show?id={{qun.id}}" class="weui-media-box weui-media-box_appmsg"
              hover-class="weui-cell_active">
             <div class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-              <image class="avatar" :src="video.shareImg[0]['url']" />
+              <image class="avatar" :src="qun.avatar[0]['url']" />
             </div>
             <div class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-              <div class="weui-media-box__title topic-title">{{ video.title }}</div>
+              <div class="weui-media-box__title topic-title">{{ qun.name }}</div>
 
               <div class="weui-media-box__info topic-info">
-                <div class="weui-media-box__info__meta">{{ video.intro }}</div>
+                <div class="weui-media-box__info__meta">{{ qun.intro }}</div>
               </div>
 
-              <div class="weui-media-box__desc"><datetime-diff :datetime="video.created_at"></datetime-diff></div>
+              <div class="weui-media-box__desc"><datetime-diff :datetime="qun.created_at"></datetime-diff></div>
             </div>
           </a>
         </div>
@@ -50,15 +50,15 @@
         </div>
       </div>
     </div>
-    <video-create-link v-if="isLoggedIn"></video-create-link>
+    <qun-create-link v-if="isLoggedIn"></qun-create-link>
   </div>
 </template>
 <config>
 {
-navigationBarTitleText: 'Ta 的短视频',
+navigationBarTitleText: 'Ta 的群裂变',
 enablePullDownRefresh: true,
 usingComponents: {
-"video-create-link": "~@/components/video-create-link",
+"qun-create-link": "~@/components/qun-create-link",
 "datetime-diff": "~@/components/datetime-diff",
 "navigation-bar": "~@/components/navigation-bar",
 }
@@ -68,7 +68,7 @@ usingComponents: {
 import wepy from '@wepy/core'
 import store from '@/store'
 import {mapGetters} from '@wepy/x'
-import {getUserVideos} from '@/api/video'
+import {getUserQuns} from '@/api/qun'
 import listRefresh from '@/mixins/list-refresh.js'
 import eventHub from '@/common/eventHub'
 
@@ -87,31 +87,31 @@ wepy.page({
   async onLoad(options) {
     this.userId = options.id
     this.loadData()
-    eventHub.$on('video-created', (video) => {
+    eventHub.$on('qun-created', (qun) => {
       this.page = 1
       this.noMoreData = false
       this.loadData(true)
     })
-    eventHub.$on('video-updated', (video) => {
+    eventHub.$on('qun-updated', (qun) => {
       this.page = 1
       this.noMoreData = false
       this.loadData(true)
     })
-    eventHub.$on('video-deleted', (video) => {
+    eventHub.$on('qun-deleted', (qun) => {
       this.page = 1
       this.noMoreData = false
       this.loadData(true)
     })
 
     this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = 'Ta 的短视频'
+    this.navbar.title = '我的群列表'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
   },
   methods: {
     async fetchData() {
       // 请求话题列表接口
-      return getUserVideos(this.userId, {
+      return getUserQuns(this.userId, {
         page: this.page,
         include: 'user'
       })

@@ -54,8 +54,6 @@
 <template>
   <div class="page">
     <div class="page__bd">
-      <navigation-bar :navbar="navbar"></navigation-bar>
-
       <div class="category-list__item">
         <div class="weui-flex category-list__item-hd" @tap="categorisToggle">
           <div class="weui-flex__item page-title">{{ currentCategoryName }}</div>
@@ -86,7 +84,6 @@
 {
 enablePullDownRefresh: true,
 usingComponents: {
-"navigation-bar": "~@/components/navigation-bar",
 "topic-list": "~@/components/topic-list"
 }
 }
@@ -104,7 +101,6 @@ wepy.page({
   store,
   mixins: [ listRefresh, syncBadge ],
   data: {
-    navbar: {},
     // 分类数据
     categories: [],
     // 当前的分类
@@ -129,13 +125,6 @@ wepy.page({
       this.noMoreData = false
       this.loadData(true)
     })
-    this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = '首页'
-    this.navbar.showBack = getCurrentPages().length > 1
-    this.navbar.showHome = false
-  },
-  onShow() {
-    this.navbar.showHome = false
   },
   methods: {
     // 获取话题数据

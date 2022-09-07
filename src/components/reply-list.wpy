@@ -41,7 +41,7 @@ usingComponents: {
 </config>
 <script>
 import wepy from '@wepy/core'
-
+// todo 点击报错了, 为什么
 wepy.component({
   options: {
     styleIsolation: 'apply-shared'

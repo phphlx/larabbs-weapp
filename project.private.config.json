@@ -9,6 +9,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "summer视频列表页",
+                    "pathName": "pages/videos/user-index",
+                    "query": "id=1",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "视频页",
                     "pathName": "pages/videos/show",
                     "query": "id=102",
@@ -16,8 +23,15 @@
                     "scene": null
                 },
                 {
-                    "name": "summer视频列表页",
-                    "pathName": "pages/videos/user-index",
+                    "name": "summer群列表页",
+                    "pathName": "pages/quns/user-index",
+                    "query": "id=1",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "群详情页",
+                    "pathName": "pages/quns/show",
                     "query": "id=1",
                     "launchMode": "default",
                     "scene": null

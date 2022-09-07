@@ -34,10 +34,35 @@ slider {
   bottom: 160px;
   right: 30px;
 }
+
+.playImg{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 94rpx;
+  height: 94rpx;
+}
+
+
+.mask {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vh;
+  left: 0;
+}
+
+.share {
+  width: 600rpx;
+  height: 100vh;
+}
 </style>
 <template>
   <div class="page">
-    <video class="video" id="1" loop="{{true}}" controls="{{false}}" autoplay="{{false}}"
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
+    <video class="video" id="1" loop="{{true}}" controls="{{false}}" autoplay="{{true}}" play-btn-position="center"
+           show-center-play-btn="{{true}}"
            src="{{video.video[0]['url']}}" bindplay="updatePlayState" bindtap="videoTap" bindtimeupdate="updateTime">
     </video>
     <div class="slider-container">
@@ -49,11 +74,20 @@ slider {
     </a>
     <image src="/assets/images/delete.png" class="delete-video" v-if="canDelete" @tap="deleteVideo"/>
   </div>
+
+  <image class="playImg" src="/assets/images/start.png" v-if="!playing" @tap="videoTap"></image>
+
+  <div class="mask" v-if="showMask" style="height:{{mask.height}}px; top: {{mask.top}}px">
+    <div class="" style="color: white;">
+      <image src="/assets/images/share.png" class="share"></image>
+    </div>
+  </div>
 </template>
 <config>
 {
 navigationBarTitleText: '视频详情',
 usingComponents: {
+"navigation-bar": "~@/components/navigation-bar",
 }
 }
 </config>
@@ -67,6 +101,7 @@ import eventHub from '@/common/eventHub'
 wepy.page({
   store,
   data: {
+    navbar: {},
     // 数据
     video: null,
     playIndex: 1,
@@ -75,7 +110,13 @@ wepy.page({
     sliderValue: 0,
     duration: 0,
     videoLength: 0,
-    videoNow: 0
+    videoNow: 0,
+    showMask: false,
+    mask: {
+      top: '',
+      height: '',
+      default: true
+    }
   },
   // 计算的属性
   computed: {
@@ -89,12 +130,24 @@ wepy.page({
       return this.user.id === this.video.user_id || this.$app.can('manage_contents')
     }
   },
-  onLoad(options) {
-    this.loadVideo(options.id)
+  async onLoad(options) {
+    await this.loadVideo(options.id)
 
     eventHub.$on('video-updated', (...args) => {
       this.loadVideo(options.id)
     })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = this.video.title
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
+
+    this.mask.top = this.navbar.height
+  },
+  async onShow() {
+    let res = await wx.getSystemInfo()
+
+    this.mask.height = res.windowHeight
   },
   methods: {
     async deleteVideo() {
@@ -133,6 +186,22 @@ wepy.page({
 
       this.video = videoResponse.data
     },
+    async previewQrcode() {
+      if (!this.mask.default) { // 显示一次后不再显示
+        return
+      }
+      this.mask.default = false
+
+      await setTimeout(() => {
+        wx.previewImage({
+          urls: [this.video.qrcode[0]['url']]
+        })
+        this.showMask = false
+      }, 8000)
+      // todo 分享两次? 裂变次数达到后不显示蒙层?
+      this.showMask = true
+      this.videoTap()
+    },
     async videoTap(e) { // 无语, 动态绑定 video.id 就不行, 真奇怪
       let videoContext = wx.createVideoContext(this.playIndex + '', this) // 这里对应的视频id
       if (this.playing) {
@@ -148,30 +217,30 @@ wepy.page({
     async updatePlayState(e) {
       this.playing = true
     },
-    //拖动进度条触发事件
+    // 拖动进度条触发事件
     sliderChange(e) {
       if (this.duration) {
-        let videoContextPrev = wx.createVideoContext(this.playIndex + '', this);
-        videoContextPrev.seek(e.$wx.detail.value / 100 * this.duration);
+        let videoContextPrev = wx.createVideoContext(this.playIndex + '', this)
+        videoContextPrev.seek(e.$wx.detail.value / 100 * this.duration)
         this.sliderValue = e.$wx.detail.value
         this.updateState = true
       }
     },
     sliderChanging(e) {
-      this.updateState = false //拖拽过程中，不允许更新进度条
+      this.updateState = false // 拖拽过程中，不允许更新进度条
     },
     updateTime(e) {
-      if (this.updateState) { //判断拖拽完成后才触发更新，避免拖拽失效
-        let sliderValue = e.$wx.detail.currentTime / e.$wx.detail.duration * 100;
-        let nowTime = new Date().getTime();
+      if (this.updateState) { // 判断拖拽完成后才触发更新，避免拖拽失效
+        let sliderValue = e.$wx.detail.currentTime / e.$wx.detail.duration * 100
+        let nowTime = new Date().getTime()
         let exp = (e.$wx.detail.duration / 60) * 1000
-        let newTime = new Date(nowTime + exp * 60).getTime();
-        let time = (newTime - nowTime) / 1000;
+        let newTime = new Date(nowTime + exp * 60).getTime()
+        let time = (newTime - nowTime) / 1000
         // 获取天、时、分、秒
-        let day = parseInt(time / (60 * 60 * 24));
-        let hou = parseInt(time % (60 * 60 * 24) / 3600);
-        let min = parseInt(time % (60 * 60 * 24) % 3600 / 60);
-        let sec = parseInt(time % (60 * 60 * 24) % 3600 % 60);
+        let day = parseInt(time / (60 * 60 * 24))
+        let hou = parseInt(time % (60 * 60 * 24) / 3600)
+        let min = parseInt(time % (60 * 60 * 24) % 3600 / 60)
+        let sec = parseInt(time % (60 * 60 * 24) % 3600 % 60)
         let videoLength = {
           day: this.timeFormat(day),
           hou: this.timeFormat(hou),
@@ -179,13 +248,13 @@ wepy.page({
           sec: this.timeFormat(sec)
         }
         let exp2 = (e.$wx.detail.currentTime / 60) * 1000
-        let newTime2 = new Date(nowTime + exp2 * 60).getTime();
-        let time2 = (newTime2 - nowTime) / 1000;
+        let newTime2 = new Date(nowTime + exp2 * 60).getTime()
+        let time2 = (newTime2 - nowTime) / 1000
         // 获取天、时、分、秒
-        let day2 = parseInt(time2 / (60 * 60 * 24));
-        let hou2 = parseInt(time2 % (60 * 60 * 24) / 3600);
-        let min2 = parseInt(time2 % (60 * 60 * 24) % 3600 / 60);
-        let sec2 = parseInt(time2 % (60 * 60 * 24) % 3600 % 60);
+        let day2 = parseInt(time2 / (60 * 60 * 24))
+        let hou2 = parseInt(time2 % (60 * 60 * 24) / 3600)
+        let min2 = parseInt(time2 % (60 * 60 * 24) % 3600 / 60)
+        let sec2 = parseInt(time2 % (60 * 60 * 24) % 3600 % 60)
         let videoNow = {
           day: this.timeFormat(day2),
           hou: this.timeFormat(hou2),
@@ -196,11 +265,15 @@ wepy.page({
         this.duration = e.$wx.detail.duration
         this.videoLength = videoLength
         this.videoNow = videoNow
+
+        if (this.sliderValue >= this.video.time) {
+          this.previewQrcode()
+        }
       }
     },
     // 倒计时
-    timeFormat(param) { //小于 10 的格式化函数
-      return param < 10 ? '0' + param : `${param}`;
+    timeFormat(param) { // 小于 10 的格式化函数
+      return param < 10 ? '0' + param : `${param}`
     }
   },
   onReady() {

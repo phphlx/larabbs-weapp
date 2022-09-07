@@ -1,0 +1,27 @@
+<style lang="less" scoped>
+.create-qun {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+</style>
+
+<template>
+  <a url="/pages/quns/create">
+    <image src="/assets/images/create.png" class="create-qun" />
+  </a>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+
+wepy.component({
+  options: {
+    styleIsolation: 'apply-shared'
+  },
+  props: {
+  }
+})
+</script>

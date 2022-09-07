@@ -11,6 +11,7 @@
 </style>
 <template>
   <div class="page">
+    <navigation-bar :navbar="navbar"></navigation-bar>
     <div class="page__bd register-wrap">
 
       <div class="weui-toptips weui-toptips_warn" v-if="errorMessage">{{ errorMessage }}</div>
@@ -70,6 +71,9 @@
 <config>
 {
 navigationBarTitleText: '注册',
+usingComponents: {
+"navigation-bar": "~@/components/navigation-bar",
+}
 }
 </config>
 <script>
@@ -80,10 +84,17 @@ import WeValidator from 'we-validator'
 wepy.page({
   store,
   data: {
+    navbar: {},
     // 表单
     form: {},
     // 表单错误
     errors: {}
+  },
+  onLoad() {
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '注册'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   onReady() {
     this.initValidator()

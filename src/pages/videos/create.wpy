@@ -63,6 +63,8 @@
 </style>
 <template>
   <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.title}">标题</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.title}">
@@ -121,6 +123,19 @@
     </div>
     <div v-if="errors.qrcode" class="weui-cells__tips error-message">{{ errors.qrcode[0] }}</div>
 
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.time}">播放到多少秒弹广告</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.time}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请填写时间" name="time" v-model="form.time" />
+        </div>
+        <div v-if="errors.time" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.time" class="weui-cells__tips error-message">{{ errors.time[0] }}</div>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareTitle}">分享标题</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareTitle}">
@@ -159,7 +174,8 @@
 {
 navigationBarTitleText: '制作视频裂变',
 usingComponents: {
-"van-uploader": "module:@vant/weapp/dist/uploader"
+"van-uploader": "module:@vant/weapp/dist/uploader",
+"navigation-bar": "~@/components/navigation-bar",
 }
 }
 </config>
@@ -178,6 +194,7 @@ wepy.page({
     ...mapGetters(['isLoggedIn'])
   },
   data: {
+    navbar: {},
     form: {
       video: [],
       qrcode: [],
@@ -192,6 +209,11 @@ wepy.page({
         url: '/pages/auth/login'
       })
     }
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '制作短视频'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
   },
   onReady() {
     this.initValidator()
@@ -214,6 +236,9 @@ wepy.page({
           qrcode: {
             required: true
           },
+          time: {
+            required: true
+          },
           shareTitle: {
             required: true
           },
@@ -233,6 +258,9 @@ wepy.page({
           },
           qrcode: {
             required: '请上传二维码'
+          },
+          time: {
+            required: '请填写时间'
           },
           shareTitle: {
             required: '请输入分享标题'

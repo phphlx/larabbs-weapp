@@ -65,34 +65,18 @@
   <div class="page__bd">
     <navigation-bar :navbar="navbar"></navigation-bar>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.title}">标题</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.name}">群名称</div>
     <div class="weui-cells weui-cells_after-title">
-      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.title}">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.name}">
         <div class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入标题" name="title" v-model="form.title" />
+          <input class="weui-input" placeholder="请输入群名称" name="title" v-model="form.name" />
         </div>
-        <div v-if="errors.title" class="weui-cell__ft">
+        <div v-if="errors.name" class="weui-cell__ft">
           <icon type="warn" size="23" color="#E64340"></icon>
         </div>
       </div>
     </div>
-    <div v-if="errors.title" class="weui-cells__tips error-message">{{ errors.title[0] }}</div>
-
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.video}">视频 (文件超过 60M 请使用 handbrake 压缩)</div>
-    <div class="weui-cells weui-cells_after-title">
-      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.video}">
-        <div class="weui-cell__bd">
-          <div class="avatar-wrap">
-            <van-uploader accept="video" file-list="{{ form.video }}" multiple="{{false}}" max-count="1"
-                          bind:after-read="uploadVideo" bind:delete="deleteVideo" />
-          </div>
-        </div>
-        <div v-if="errors.video" class="weui-cell__ft">
-          <icon type="warn" size="23" color="#E64340"></icon>
-        </div>
-      </div>
-    </div>
-    <div v-if="errors.video" class="weui-cells__tips error-message">{{ errors.video[0] }}</div>
+    <div v-if="errors.name" class="weui-cells__tips error-message">{{ errors.name[0] }}</div>
 
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">广告语</div>
     <div class="weui-cells weui-cells_after-title">
@@ -106,6 +90,22 @@
       </div>
     </div>
     <div v-if="errors.intro" class="weui-cells__tips error-message">{{ errors.intro[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.avatar}">群头像</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.avatar}">
+        <div class="weui-cell__bd">
+          <div class="avatar-wrap">
+            <van-uploader accept="image" file-list="{{ form.avatar }}" multiple="{{false}}" max-count="1"
+                          bind:after-read="uploadAvatar" bind:delete="deleteAvatar" />
+          </div>
+        </div>
+        <div v-if="errors.avatar" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.avatar" class="weui-cells__tips error-message">{{ errors.avatar[0] }}</div>
 
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.qrcode}">二维码</div>
     <div class="weui-cells weui-cells_after-title">
@@ -123,18 +123,18 @@
     </div>
     <div v-if="errors.qrcode" class="weui-cells__tips error-message">{{ errors.qrcode[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.time}">播放到多少秒弹广告</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.num}">群人数</div>
     <div class="weui-cells weui-cells_after-title">
-      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.time}">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.num}">
         <div class="weui-cell__bd">
-          <input class="weui-input" placeholder="请填写时间" name="time" v-model="form.time" />
+          <input class="weui-input" placeholder="请输入群人数" name="num" v-model="form.num" />
         </div>
-        <div v-if="errors.time" class="weui-cell__ft">
+        <div v-if="errors.num" class="weui-cell__ft">
           <icon type="warn" size="23" color="#E64340"></icon>
         </div>
       </div>
     </div>
-    <div v-if="errors.time" class="weui-cells__tips error-message">{{ errors.time[0] }}</div>
+    <div v-if="errors.num" class="weui-cells__tips error-message">{{ errors.num[0] }}</div>
 
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareTitle}">分享标题</div>
     <div class="weui-cells weui-cells_after-title">
@@ -172,7 +172,7 @@
 </template>
 <config>
 {
-navigationBarTitleText: '制作视频裂变',
+navigationBarTitleText: '制作群裂变',
 usingComponents: {
 "van-uploader": "module:@vant/weapp/dist/uploader",
 "navigation-bar": "~@/components/navigation-bar",
@@ -183,7 +183,7 @@ usingComponents: {
 import wepy from '@wepy/core'
 import store from '@/store'
 import { mapGetters } from '@wepy/x'
-import {uploadImg, uploadVideo, updateVideo, getVideo} from '@/api/video'
+import {uploadImg, createQun} from '@/api/qun'
 import eventHub from '@/common/eventHub'
 import WeValidator from 'we-validator'
 
@@ -196,12 +196,11 @@ wepy.page({
   data: {
     navbar: {},
     form: {
-      video: [],
+      avatar: [],
       qrcode: [],
       shareImg: []
     },
-    errors: {},
-    video: null
+    errors: {}
   },
   onLoad(options) {
     // 未登录跳转到登录页面
@@ -211,10 +210,8 @@ wepy.page({
       })
     }
 
-    this.loadVideo(options.id)
-
     this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = '编辑短视频'
+    this.navbar.title = '创建群'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
   },
@@ -227,10 +224,10 @@ wepy.page({
       this.validatorInstance = new WeValidator({
         multiCheck: true,
         rules: {
-          title: {
+          name: {
             required: true
           },
-          video: {
+          avatar: {
             required: true
           },
           intro: {
@@ -239,7 +236,7 @@ wepy.page({
           qrcode: {
             required: true
           },
-          time: {
+          num: {
             required: true
           },
           shareTitle: {
@@ -250,11 +247,11 @@ wepy.page({
           }
         },
         messages: {
-          title: {
-            required: '请输入标题'
+          name: {
+            required: '请输入群名称'
           },
-          video: {
-            required: '没有上传视频'
+          avatar: {
+            required: '没有上传群头像'
           },
           intro: {
             required: '请输入广告语'
@@ -262,8 +259,8 @@ wepy.page({
           qrcode: {
             required: '请上传二维码'
           },
-          time: {
-            required: '请填写时间'
+          num: {
+            required: '请输入群人数'
           },
           shareTitle: {
             required: '请输入分享标题'
@@ -282,26 +279,17 @@ wepy.page({
         }
       })
     },
-    // 获取数据
-    async loadVideo(id) {
-      const videoResponse = await getVideo(id, {
-        include: 'user'
-      })
-
-      this.form = videoResponse.data
-      this.video = videoResponse.data
-    },
-    async uploadVideo(event) {
+    async uploadAvatar(event) {
       const { file } = event.$wx.detail
       try {
-        let imageResponse = await uploadVideo(file.url)
+        let imageResponse = await uploadImg(file.url)
         let responseData = JSON.parse(imageResponse.data)
-        this.form.video = [{'url': responseData.path}]
+        this.form.avatar = [{'url': responseData.path}]
       } catch (err) {}
     },
-    async deleteVideo (event) {
+    async deleteAvatar (event) {
       var index = event.$wx.detail.index
-      this.form.video.splice(index - 1, 1)
+      this.form.avatar.splice(index - 1, 1)
     },
     async uploadQrcode(event) {
       const { file } = event.$wx.detail
@@ -335,17 +323,17 @@ wepy.page({
       }
 
       // 请求发布回复接口
-      let createResponse = await updateVideo(this.video.id, this.form)
+      let createResponse = await createQun(this.form)
 
       // 提示发布成功
       wx.showToast({
-        title: '修改成功',
+        title: '发布成功',
         icon: 'success'
       })
 
       // 2 秒后返回上一页
       setTimeout(function() {
-        eventHub.$emit('video-updated', createResponse.data)
+        eventHub.$emit('qun-created', createResponse.data)
         wx.navigateBack()
       }, 2000)
     }

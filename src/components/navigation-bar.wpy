@@ -1,0 +1,173 @@
+<template>
+  <div class="navbar-box" v-if="navbar.showNavbar">
+    <div class="placeholder" style="height:{{navbar.height}}px"></div>
+    <div class="navbar" :class="{screenCenter: navbar.titleStyle!=1}"
+          style="padding-top: {{navbar.paddingTop}}px; padding-bottom: {{navbar.paddingBottom}}px;">
+      <div class="nav_capsule" :class="{no_border:!navbar.showHome || !navbar.showBack}"
+           style="height:{{navbar.height_capsule}}px">
+        <button class="nav_back" @tap="navBack" v-if="navbar.showBack">
+          <div class="icon_back"></div>
+        </button>
+        <div class="divide" v-if="navbar.showHome && navbar.showBack"></div>
+        <button class="nav_home" @tap="goHome" v-if="navbar.showHome" hover-class="selected">
+          <div class="icon_home"></div>
+        </button>
+      </div>
+      <div class="nav_title" style="height: {{navbar.height_capsule}}px;">
+        <text class="title">{{ navbar.title }}</text>
+      </div>
+      <div class="nav_right" style="width:{{navbar.width_capsule}}px;"></div>
+    </div>
+  </div>
+</template>
+<script>
+import wepy from '@wepy/core'
+
+wepy.component({
+  options: {
+    styleIsolation: 'apply-shared'
+  },
+  props: {
+    navbar: {
+      type: Object
+    }
+  },
+  methods: {
+    navBack() {
+      wx.navigateBack()
+    },
+    goHome() {
+      wx.switchTab({
+        url: '/pages/topics/index'
+      })
+    }
+  }
+})
+
+</script>
+<style lang="less" scoped>
+.navbar {
+  z-index: 99999;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 20rpx;
+  padding-right: 20rpx;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+
+  &.screenCenter {
+    display: block;
+
+    .nav_capsule {
+      position: absolute;
+    }
+  }
+
+  .nav_capsule {
+    min-width: 96rpx;
+    border: 2rpx solid #F0F0F0;
+    border-radius: 100rpx;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    button::after {
+      border: none;
+    }
+
+    &.no_border {
+      border: none;
+    }
+
+    .divide {
+      height: 40rpx;
+      border-left: 2rpx solid #F0F0F0;
+    }
+
+    .nav_back, .nav_home {
+      width: 78rpx;
+      height: 44rpx;
+      padding: 0;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nav_back {
+      border-top-left-radius: 100px;
+      border-bottom-left-radius: 100px;
+    }
+
+    .icon_back {
+      width: 20rpx;
+      height: 36rpx;
+      background-image: url('https://static.soyoung.com/sy-pre/icon_back-1554361800687.png');
+      background-size: contain;
+    }
+
+    .icon_home {
+      width: 40rpx;
+      height: 40rpx;
+      background-image: url('https://static.soyoung.com/sy-pre/icon_home-1554369000799.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .nav_home {
+      border-top-right-radius: 100px;
+      border-bottom-right-radius: 100px;
+
+      &.selected {
+        .icon_home {
+          width: 46rpx;
+          height: 46rpx;
+          background-image: url('https://static.soyoung.com/sy-pre/icon_home_selected-1554369000799.png');
+          background-size: cover;
+        }
+      }
+    }
+  }
+
+  .nav_title {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //font-weight: bold;
+    font-size: 32rpx;
+    color: #000;
+
+    .title {
+      display: block;
+      width: 300rpx;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+  }
+
+  .nav_right {
+    height: 100%;
+  }
+
+  animation: anim-navbar 0.4s linear 0s 1;
+}
+
+.placeholder {
+  width: 100%;
+}
+
+@keyframes anim-navbar {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+</style>
