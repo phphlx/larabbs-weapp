@@ -30,6 +30,7 @@
           </div>
           <div class="weui-cell__bd">
             <div>{{ user.name }}</div>
+            <div v-if="user.member">会员于 {{ user.last_day }} 到期</div>
             <div class="page__desc">{{ user.introduction || '' }}</div>
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
@@ -44,6 +45,7 @@
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
+        <div v-if="user.member">
         <a class="weui-cell weui-cell_access" url="/pages/notifications/index">
           <div class="weui-cell__bd">
             <div style="display: inline-block; vertical-align: middle">我的消息</div>
@@ -75,6 +77,7 @@
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
+        </div>
       </div>
       <div class="page__bd page__bd_spacing logout">
         <button class="weui-btn" type="warn" v-if="isLoggedIn" @tap="logout">退出登录</button>
