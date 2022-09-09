@@ -55,7 +55,7 @@
 </template>
 <config>
 {
-navigationBarTitleText: 'Ta 的群裂变',
+navigationBarTitleText: 'Ta 的group',
 enablePullDownRefresh: true,
 usingComponents: {
 "qun-create-link": "~@/components/qun-create-link",
@@ -104,7 +104,7 @@ wepy.page({
     })
 
     this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = '我的群列表'
+    this.navbar.title = '我的列表'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
   },

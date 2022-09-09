@@ -16,13 +16,12 @@
 
       <div class="weui-toptips weui-toptips_warn" v-if="errorMessage">{{ errorMessage }}</div>
 
-      <div class="weui-cells__title">裂变推广 用户注册</div>
+      <div class="weui-cells__title">用户注册</div>
 
       <div class="weui-cells__title {{ (errors.username || errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
         用户名</div>
       <div class="weui-cells weui-cells_after-title">
-        <div
-          class="weui-cell  weui-cell_vcode {{ (errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
+        <div class="weui-cell  weui-cell_input {{ (errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
           <div class="weui-cell__bd">
             <input class="weui-input" type="number" placeholder="请输入邮箱或手机号"
                    v-model="form.username" name="username"/>

@@ -102,7 +102,7 @@
           <div class="intro">{{ qun.intro }}</div>
         </div>
         <div class="button-wrap">
-          <button class="weui-btn weui-btn_primary" @tap="previewQrcode">加入群聊</button>
+          <button class="weui-btn weui-btn_primary" @tap="previewQrcode">加入</button>
         </div>
       </article>
     </div>
@@ -120,7 +120,7 @@
 </template>
 <config>
 {
-navigationBarTitleText: '群 详情',
+navigationBarTitleText: 'group详情',
 usingComponents: {
 "datetime-diff": "~@/components/datetime-diff",
 "qun-create-link": "~@/components/qun-create-link",
@@ -171,7 +171,7 @@ wepy.page({
       // 删除确认
       const res = await wepy.wx.showModal({
         title: '确认删除',
-        content: '您确认删除该群裂变吗',
+        content: '您确认删除吗',
         confirmText: '删除',
         cancelText: '取消'
       })

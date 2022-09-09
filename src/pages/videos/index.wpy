@@ -1,0 +1,118 @@
+<style lang="less">
+.weui-media-box__info__meta {
+  margin: 0;
+  font-size: 12px;
+}
+.topic-info {
+  margin-top: 5px;
+}
+.topic-title {
+  white-space: normal;
+  font-size: 14px;
+}
+.avatar {
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 50px;
+  height: 50px;
+}
+.reply-count {
+  background-color: #d8d8d8;
+  float: right;
+}
+</style>
+<template>
+  <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
+    <div class="weui-panel weui-panel_access">
+      <div class="weui-panel__bd">
+        <div v-for="video in resourceData" :key="video.id">
+          <a url="/pages/videos/show?id={{video.id}}" class="weui-media-box weui-media-box_appmsg"
+             hover-class="weui-cell_active">
+            <div class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+              <image class="avatar" :src="video.shareImg[0]['url']" />
+            </div>
+            <div class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+              <div class="weui-media-box__title topic-title">{{ video.title }}</div>
+
+              <div class="weui-media-box__info topic-info">
+                <div class="weui-media-box__info__meta">{{ video.intro }}</div>
+              </div>
+
+              <div class="weui-media-box__desc"><datetime-diff :datetime="video.created_at"></datetime-diff></div>
+            </div>
+          </a>
+        </div>
+        <div class="weui-loadmore weui-loadmore_line" v-if="noMoreData">
+          <div class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多数据</div>
+        </div>
+      </div>
+    </div>
+<!--    <video-create-link v-if="isLoggedIn"></video-create-link>-->
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: 'Ta 的短视频',
+enablePullDownRefresh: true,
+usingComponents: {
+<!--"video-create-link": "~@/components/video-create-link",-->
+"datetime-diff": "~@/components/datetime-diff",
+"navigation-bar": "~@/components/navigation-bar",
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import {mapGetters} from '@wepy/x'
+import {getUserVideos, getVideos} from '@/api/video'
+import listRefresh from '@/mixins/list-refresh.js'
+import eventHub from '@/common/eventHub'
+
+wepy.page({
+  store,
+  mixins: [listRefresh],
+  data: {
+    navbar: {},
+  },
+  // 计算的属性
+  computed: {
+    ...mapGetters(['isLoggedIn'])
+  },
+  async onLoad(options) {
+    this.loadData()
+    eventHub.$on('video-created', (video) => {
+      this.page = 1
+      this.noMoreData = false
+      this.loadData(true)
+    })
+    eventHub.$on('video-updated', (video) => {
+      this.page = 1
+      this.noMoreData = false
+      this.loadData(true)
+    })
+    eventHub.$on('video-deleted', (video) => {
+      this.page = 1
+      this.noMoreData = false
+      this.loadData(true)
+    })
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '短视频'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
+  },
+  methods: {
+    async fetchData() {
+      // 请求话题列表接口
+      return getVideos({
+        page: this.page,
+        include: 'user'
+      })
+    }
+  }
+})
+</script>

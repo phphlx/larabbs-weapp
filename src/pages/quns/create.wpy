@@ -65,11 +65,11 @@
   <div class="page__bd">
     <navigation-bar :navbar="navbar"></navigation-bar>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.name}">群名称</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.name}">名称</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.name}">
         <div class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入群名称" name="title" v-model="form.name" />
+          <input class="weui-input" placeholder="请输入名称" name="title" v-model="form.name" />
         </div>
         <div v-if="errors.name" class="weui-cell__ft">
           <icon type="warn" size="23" color="#E64340"></icon>
@@ -91,7 +91,7 @@
     </div>
     <div v-if="errors.intro" class="weui-cells__tips error-message">{{ errors.intro[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.avatar}">群头像</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.avatar}">头像</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.avatar}">
         <div class="weui-cell__bd">
@@ -123,11 +123,11 @@
     </div>
     <div v-if="errors.qrcode" class="weui-cells__tips error-message">{{ errors.qrcode[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.num}">群人数</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.num}">人数</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.num}">
         <div class="weui-cell__bd">
-          <input class="weui-input" placeholder="请输入群人数" name="num" v-model="form.num" />
+          <input class="weui-input" placeholder="请输入人数" name="num" v-model="form.num" />
         </div>
         <div v-if="errors.num" class="weui-cell__ft">
           <icon type="warn" size="23" color="#E64340"></icon>
@@ -172,7 +172,7 @@
 </template>
 <config>
 {
-navigationBarTitleText: '制作群裂变',
+navigationBarTitleText: '制作group',
 usingComponents: {
 "van-uploader": "module:@vant/weapp/dist/uploader",
 "navigation-bar": "~@/components/navigation-bar",
@@ -211,7 +211,7 @@ wepy.page({
     }
 
     this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = '创建群'
+    this.navbar.title = '创建'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
   },
@@ -248,10 +248,10 @@ wepy.page({
         },
         messages: {
           name: {
-            required: '请输入群名称'
+            required: '请输入名称'
           },
           avatar: {
-            required: '没有上传群头像'
+            required: '没有上传头像'
           },
           intro: {
             required: '请输入广告语'
@@ -260,7 +260,7 @@ wepy.page({
             required: '请上传二维码'
           },
           num: {
-            required: '请输入群人数'
+            required: '请输入人数'
           },
           shareTitle: {
             required: '请输入分享标题'

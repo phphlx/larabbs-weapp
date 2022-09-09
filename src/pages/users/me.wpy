@@ -46,25 +46,25 @@
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
         <div v-if="user.member">
-        <a class="weui-cell weui-cell_access" url="/pages/notifications/index">
-          <div class="weui-cell__bd">
-            <div style="display: inline-block; vertical-align: middle">我的消息</div>
-            <div class="weui-badge" style="margin-left: 5px;" v-if="unreadCount">{{ unreadCount }}</div>
-          </div>
-          <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-        </a>
-        <a class="weui-cell weui-cell_access" url="{{ isLoggedIn ? '/pages/topics/user-index?id='+ user.id : '' }}">
-          <div class="weui-cell__bd" url="">
-            <div class="weui-cell__bd">我的话题</div>
-          </div>
-          <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-        </a>
-        <a class="weui-cell weui-cell_access" url="/pages/replies/user-index?id={{user.id}}">
-          <div class="weui-cell__bd" url="">
-            <div class="weui-cell__bd">我的回复</div>
-          </div>
-          <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-        </a>
+<!--        <a class="weui-cell weui-cell_access" url="/pages/notifications/index">-->
+<!--          <div class="weui-cell__bd">-->
+<!--            <div style="display: inline-block; vertical-align: middle">我的消息</div>-->
+<!--            <div class="weui-badge" style="margin-left: 5px;" v-if="unreadCount">{{ unreadCount }}</div>-->
+<!--          </div>-->
+<!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
+<!--        </a>-->
+<!--        <a class="weui-cell weui-cell_access" url="{{ isLoggedIn ? '/pages/topics/user-index?id='+ user.id : '' }}">-->
+<!--          <div class="weui-cell__bd" url="">-->
+<!--            <div class="weui-cell__bd">我的话题</div>-->
+<!--          </div>-->
+<!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
+<!--        </a>-->
+<!--        <a class="weui-cell weui-cell_access" url="/pages/replies/user-index?id={{user.id}}">-->
+<!--          <div class="weui-cell__bd" url="">-->
+<!--            <div class="weui-cell__bd">我的回复</div>-->
+<!--          </div>-->
+<!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
+<!--        </a>-->
         <a class="weui-cell weui-cell_access" url="/pages/videos/user-index?id={{user.id}}">
           <div class="weui-cell__bd" url="">
             <div class="weui-cell__bd">我的短视频</div>
@@ -73,7 +73,7 @@
         </a>
         <a class="weui-cell weui-cell_access" url="/pages/quns/user-index?id={{user.id}}">
           <div class="weui-cell__bd" url="">
-            <div class="weui-cell__bd">我的群</div>
+            <div class="weui-cell__bd">我的group</div>
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>

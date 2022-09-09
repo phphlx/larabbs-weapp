@@ -43,6 +43,12 @@ export function deleteVideo(id, data) {
   })
 }
 
+export function getVideos(data) {
+  return request('videos/', {
+    data: data
+  })
+}
+
 export function getUserVideos(userId, data) {
   return request('users/' + userId + '/videos', {
     data: data
