@@ -14,51 +14,51 @@
     <navigation-bar :navbar="navbar"></navigation-bar>
     <div class="page__bd register-wrap">
 
-      <div class="weui-toptips weui-toptips_warn" v-if="errorMessage">{{ errorMessage }}</div>
+      <div class="weui-form__control-area">
+        <div class="weui-cells__group weui-cells__group_form">
+          <div class="weui-cells__title">注册</div>
+          <div class="weui-cells">
+            <label for="js_input1" class="weui-cell weui-cell_active">
+              <div class="weui-cell__hd {{ (errors.username || errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
+                <span class="weui-label">用户名</span>
+                <div class="weui-cell__desc">登录名</div>
+              </div>
+              <div class="weui-cell__bd">
+                <input id="js_input1" class="weui-input" placeholder="请输入邮箱或手机号" v-model="form.username" name="username">
+              </div>
+            </label>
 
-      <div class="weui-cells__title">用户注册</div>
+            <label for="js_input2" class="weui-cell weui-cell_active">
+              <div class="weui-cell__hd {{ (errors.name) ? 'weui-cell_warn' : ''}}">
+                <span class="weui-label">姓名</span>
+              </div>
+              <div class="weui-cell__bd">
+                <input id="js_input2" class="weui-input" placeholder="请输入姓名" name="name" v-model="form.name">
+              </div>
+            </label>
 
-      <div class="weui-cells__title {{ (errors.username || errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
-        用户名</div>
-      <div class="weui-cells weui-cells_after-title">
-        <div class="weui-cell  weui-cell_input {{ (errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
-          <div class="weui-cell__bd">
-            <input class="weui-input" type="number" placeholder="请输入邮箱或手机号"
-                   v-model="form.username" name="username"/>
+            <label for="js_input3" class="weui-cell weui-cell_active">
+              <div class="weui-cell__hd {{ (errors.password) ? 'weui-cell_warn' : ''}}">
+                <span class="weui-label">密码</span>
+              </div>
+              <div class="weui-cell__bd">
+                <input id="js_input3" class="weui-input" placeholder="请输入密码" type="password" name="password"
+                       v-model="form.password">
+              </div>
+            </label>
           </div>
         </div>
       </div>
-      <div v-if="errors.username" class="weui-cells__tips error-message">{{ errors.username[0] }}</div>
-      <div v-if="errors.email" class="weui-cells__tips error-message">{{ errors.email[0] }}</div>
-      <div v-if="errors.phone" class="weui-cells__tips error-message">{{ errors.phone[0] }}</div>
 
-      <!-- 姓名 -->
-      <div class="weui-cells__title" :class="{'weui-cell_warn': errors.name}">姓名</div>
-      <div class="weui-cells weui-cells_after-title">
-        <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.name}">
-          <div class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入姓名" name="name" v-model="form.name"/>
-          </div>
-          <div class="weui-cell__ft">
-            <icon v-if="errors.name" type="warn" size="23" color="#E64340"></icon>
-          </div>
-        </div>
-      </div>
-      <div v-if="errors.name" class="weui-cells__tips error-message">{{ errors.name[0] }}</div>
+      <div class="weui-form__tips-area">
+        <div v-if="errors.username" class="weui-form__tips error-message">{{ errors.username[0] }}</div>
+        <div v-if="errors.email" class="weui-form__tips error-message">{{ errors.email[0] }}</div>
+        <div v-if="errors.phone" class="weui-form__tips error-message">{{ errors.phone[0] }}</div>
 
-      <!-- 密码 -->
-      <div class="weui-cells__title" :class="{'weui-cell_warn': errors.password}">密码</div>
-      <div class="weui-cells weui-cells_after-title">
-        <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.password}">
-          <div class="weui-cell__bd">
-            <input class="weui-input" v-model="form.password" placeholder="请输入密码" name="password" type="password"/>
-          </div>
-          <div class="weui-cell__ft">
-            <icon v-if="errors.password" type="warn" size="23" color="#E64340"></icon>
-          </div>
-        </div>
+        <div v-if="errors.name" class="weui-form__tips error-message">{{ errors.name[0] }}</div>
+
+        <div v-if="errors.password" class="weui-form__tips error-message">{{ errors.password[0] }}</div>
       </div>
-      <div v-if="errors.password" class="weui-cells__tips error-message">{{ errors.password[0] }}</div>
 
       <div class="weui-btn-area">
         <button class="weui-btn" type="primary" @tap="submit">注册</button>

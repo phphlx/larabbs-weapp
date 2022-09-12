@@ -37,7 +37,7 @@ slider {
 
 .playImg{
   position: fixed;
-  top: 50%;
+  top: 58vh;
   left: 50%;
   transform: translate(-50%,-50%);
   width: 94rpx;
@@ -61,7 +61,8 @@ slider {
   <div class="page">
     <navigation-bar :navbar="navbar"></navigation-bar>
 
-    <video class="video" id="1" loop="{{true}}" controls="{{false}}" autoplay="{{true}}" play-btn-position="center"
+    <video class="video" v-if="video" id="1" loop="{{true}}" controls="{{false}}" autoplay="{{true}}"
+           play-btn-position="center"
            show-center-play-btn="{{true}}"
            src="{{video.video[0]['url']}}" bindplay="updatePlayState" bindtap="videoTap" bindtimeupdate="updateTime">
     </video>
@@ -75,7 +76,7 @@ slider {
     <image src="/assets/images/delete.png" class="delete-video" v-if="canDelete" @tap="deleteVideo"/>
   </div>
 
-  <image class="playImg" src="/assets/images/start.png" v-if="!playing" @tap="videoTap"></image>
+  <image class="playImg" src="/assets/images/start.png" v-if="!playing && video" @tap="videoTap"></image>
 
   <div class="mask" v-if="showMask" style="height:{{mask.height}}px; top: {{mask.top}}px">
     <div class="" style="color: white;">
@@ -85,7 +86,7 @@ slider {
 </template>
 <config>
 {
-navigationBarTitleText: '视频详情',
+navigationBarTitleText: '详情',
 usingComponents: {
 "navigation-bar": "~@/components/navigation-bar",
 }
@@ -101,7 +102,9 @@ import eventHub from '@/common/eventHub'
 wepy.page({
   store,
   data: {
-    navbar: {},
+    navbar: {
+      title: '',
+    },
     // 数据
     video: null,
     playIndex: 1,

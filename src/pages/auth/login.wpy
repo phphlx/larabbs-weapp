@@ -5,6 +5,9 @@
 .weui-toptips {
   display: block;
 }
+.error-message {
+  color: #E64340;
+}
 </style>
 <template>
   <div class="page">
@@ -12,36 +15,45 @@
       <navigation-bar :navbar="navbar"></navigation-bar>
 
       <div class="page__bd login-wrap">
-        <div class="weui-toptips weui-toptips_warn fadeIn" v-if="errorMessage">{{ errorMessage }}</div>
-        <div class="weui-cells__title">用户登录</div>
-        <div class="weui-cells weui-cells_after-title">
-          <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.username}">
-            <div class="weui-cell__hd">
-              <div class="weui-label">用户名</div>
+        <div class="weui-form__control-area">
+          <div class="weui-cells__group weui-cells__group_form">
+            <div class="weui-cells__title">登录</div>
+            <div class="weui-cells">
+              <label for="js_input1" class="weui-cell weui-cell_active">
+                <div class="weui-cell__hd {{ (errors.username || errors.email || errors.phone) ? 'weui-cell_warn' : ''}}">
+                  <span class="weui-label">用户名</span>
+                </div>
+                <div class="weui-cell__bd">
+                  <input id="js_input1" class="weui-input" placeholder="请输入邮箱或手机号" v-model="form.username" name="username">
+                </div>
+              </label>
+
+              <label for="js_input3" class="weui-cell weui-cell_active">
+                <div class="weui-cell__hd {{ (errors.password) ? 'weui-cell_warn' : ''}}">
+                  <span class="weui-label">密码</span>
+                </div>
+                <div class="weui-cell__bd">
+                  <input id="js_input3" class="weui-input" placeholder="请输入密码" type="password" name="password"
+                         v-model="form.password">
+                </div>
+              </label>
             </div>
-            <div class="weui-cell__bd">
-              <input class="weui-input" placeholder="手机号或邮箱" v-model="form.username" />
-            </div>
-            <div v-if="errors.username" class="weui-cell__ft">
-              <icon type="warn" size="23" color="#E64340"></icon>
-            </div>
-          </div>
-          <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.password}">
-            <div class="weui-cell__hd">
-              <div class="weui-label">密码</div>
-            </div>
-            <div class="weui-cell__bd">
-              <input class="weui-input" placeholder="输入密码" v-model="form.password" type="password" />
-            </div>
-            <div v-if="errors.password" class="weui-cell__ft">
-              <icon type="warn" size="23" color="#E64340"></icon>
+
+            <div class="weui-cells__tips">
+              如果你还没有账号可以
+              <a url="/pages/auth/register">注册新用户</a>
             </div>
           </div>
         </div>
 
-        <div class="weui-cells__tips">
-          如果你还没有账号可以
-          <a url="/pages/auth/register">注册新用户</a>
+        <div class="weui-form__tips-area">
+          <div v-if="errors.username" class="weui-form__tips error-message">{{ errors.username[0] }}</div>
+          <div v-if="errors.email" class="weui-form__tips error-message">{{ errors.email[0] }}</div>
+          <div v-if="errors.phone" class="weui-form__tips error-message">{{ errors.phone[0] }}</div>
+
+          <div v-if="errors.password" class="weui-form__tips error-message">{{ errors.password[0] }}</div>
+
+          <div v-if="errorMessage" class="weui-form__tips error-message">{{ errorMessage }} 111</div>
         </div>
 
         <div class="weui-btn-area">
@@ -88,6 +100,7 @@ wepy.page({
     initValidator() {
       // 实例化
       this.validatorInstance = new WeValidator({
+        multiCheck: true,
         rules: {
           username: {
             required: true
@@ -106,15 +119,24 @@ wepy.page({
             minlength: '密码最少 6 位数'
           }
         },
+        // onMessage: (data) => {
+        //   this.$set(this.errors, data.name, [data.msg])
+        //   this.errorMessage = data.msg
+        // }
+
         onMessage: (data) => {
-          this.$set(this.errors, data.name, [data.msg])
-          this.errorMessage = data.msg
+          let errors = {}
+          Object.keys(data).map(function(key) {
+            errors[key] = [data[key].msg]
+          })
+
+          this.errors = errors
         }
       })
     },
     // 表单提交
     async submit() {
-      this.error = {}
+      this.errors = {}
       // 提交时重置错误
       if (!this.validatorInstance.checkData(this.form)) {
         return

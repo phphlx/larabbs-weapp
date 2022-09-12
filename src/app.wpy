@@ -98,6 +98,7 @@ wepy.app({
 <config>
 {
   pages: [
+    'pages/articles/index',
     'pages/videos/index',
     'pages/videos/user-index',
     'pages/videos/show',
@@ -129,7 +130,7 @@ wepy.app({
   },
   tabBar: {
     list: [{
-      pagePath: 'pages/videos/index',
+      pagePath: 'pages/articles/index',
       text: '首页',
       iconPath: 'assets/images/index.png',
       selectedIconPath: 'assets/images/index_selected.png'

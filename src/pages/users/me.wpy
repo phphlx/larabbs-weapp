@@ -67,7 +67,7 @@
 <!--        </a>-->
         <a class="weui-cell weui-cell_access" url="/pages/videos/user-index?id={{user.id}}">
           <div class="weui-cell__bd" url="">
-            <div class="weui-cell__bd">我的短视频</div>
+            <div class="weui-cell__bd">我的内容</div>
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
@@ -120,6 +120,10 @@ wepy.page({
     this.navbar.title = '我的'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
-  }
+  },
+  async onShow() {
+    // 加载的时候如果有用户id
+    await this.$store.dispatch('getUser')
+  },
 })
 </script>

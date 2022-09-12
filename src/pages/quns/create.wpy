@@ -78,11 +78,11 @@
     </div>
     <div v-if="errors.name" class="weui-cells__tips error-message">{{ errors.name[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">广告语</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">引导语</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.intro}">
         <div class="weui-cell__bd">
-          <textarea class="weui-textarea content" placeholder="请输入广告语" v-model="form.intro"></textarea>
+          <textarea class="weui-textarea content" placeholder="请输入引导语" v-model="form.intro"></textarea>
         </div>
         <div v-if="errors.intro" class="weui-cell__ft">
           <icon type="warn" size="23" color="#E64340"></icon>

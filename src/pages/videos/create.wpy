@@ -94,11 +94,11 @@
     </div>
     <div v-if="errors.video" class="weui-cells__tips error-message">{{ errors.video[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">广告语</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">引导语</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.intro}">
         <div class="weui-cell__bd">
-          <textarea class="weui-textarea content" placeholder="请输入广告语" v-model="form.intro"></textarea>
+          <textarea class="weui-textarea content" placeholder="请输入引导语" v-model="form.intro"></textarea>
         </div>
         <div v-if="errors.intro" class="weui-cell__ft">
           <icon type="warn" size="23" color="#E64340"></icon>
@@ -123,7 +123,7 @@
     </div>
     <div v-if="errors.qrcode" class="weui-cells__tips error-message">{{ errors.qrcode[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.time}">播放到多少秒弹广告</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.time}">播放到多少秒</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.time}">
         <div class="weui-cell__bd">
@@ -172,7 +172,7 @@
 </template>
 <config>
 {
-navigationBarTitleText: '制作视频裂变',
+navigationBarTitleText: '制作',
 usingComponents: {
 "van-uploader": "module:@vant/weapp/dist/uploader",
 "navigation-bar": "~@/components/navigation-bar",
@@ -211,7 +211,7 @@ wepy.page({
     }
 
     this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = '制作短视频'
+    this.navbar.title = '制作内容'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
   },
