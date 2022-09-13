@@ -25,6 +25,7 @@ slider {
   position: fixed;
   bottom: 80px;
   right: 30px;
+  z-index: 999;
 }
 
 .edit-video {
@@ -33,38 +34,77 @@ slider {
   position: fixed;
   bottom: 160px;
   right: 30px;
+  z-index: 999;
 }
 
-.playImg{
+.playImg {
   position: fixed;
   top: 58vh;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   width: 94rpx;
   height: 94rpx;
 }
 
-
-.mask {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.6);
-  width: 100vh;
-  left: 0;
+.qrcode {
+  width: 80vw;
+  margin-left: 10vw;
+  margin-top: 20vh;
 }
 
 .share {
-  width: 600rpx;
-  height: 100vh;
+  width: 80vw;
+}
+
+.js_dialog_wrap {
+  position: fixed;
+  z-index: 99;
+}
+
+.ads {
+  padding: 0 30rpx;
+  text-align: center;
+  color: black;
+}
+
+.ads > .image {
+  max-width: 60vw;
+  margin: 10px auto;
+}
+
+.ads > .content {
+  margin-top: 16rpx;
+  text-align: justify;
+  text-indent: 2.12em;
+  letter-spacing: 0.06em;
+  line-height: 150%;
+  font-size: 38rpx;
+}
+
+.ads > .link {
+  margin-top: 20rpx;
+  text-align: center;
+}
+
+.ads .box {
+  display: flex;
+  justify-content: center;
+  margin: 10rpx 0;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.ads .box button {
+  width: auto;
 }
 </style>
 <template>
   <div class="page">
     <navigation-bar :navbar="navbar"></navigation-bar>
 
-    <video class="video" v-if="video" id="1" loop="{{true}}" controls="{{false}}" autoplay="{{true}}"
-           play-btn-position="center"
-           show-center-play-btn="{{true}}"
-           src="{{video.video[0]['url']}}" bindplay="updatePlayState" bindtap="videoTap" bindtimeupdate="updateTime">
+    <video class="video" v-if="video" id="1" loop="{{false}}" controls="{{false}}" autoplay="{{true}}"
+           play-btn-position="center" show-center-play-btn="{{true}}" src="{{video.video[0]['url']}}"
+           bindplay="updatePlayState" bindtap="videoTap" bindtimeupdate="updateTime" bindended="showEndTip">
     </video>
     <div class="slider-container">
       <slider bindchange="sliderChange" bindchanging="sliderChanging" step="1" block-size="0" value="{{sliderValue}}"
@@ -78,9 +118,29 @@ slider {
 
   <image class="playImg" src="/assets/images/start.png" v-if="!playing && video" @tap="videoTap"></image>
 
-  <div class="mask" v-if="showMask" style="height:{{mask.height}}px; top: {{mask.top}}px">
+  <div role="button" class="js_close weui-mask" v-if="showMask" style="position: fixed; z-index: 999999;">
     <div class="" style="color: white;">
-      <image src="/assets/images/share.png" class="share"></image>
+      <image src="/assets/images/newShare.png" class="share"
+             style="padding-top: {{ navbar.height }}px;" mode="widthFix" v-if="video.type != 4"></image>
+      <image src="{{ video.qrcode[0]['url'] }}" class="qrcode"
+             style="padding-top: {{ navbar.height }}px;" mode="widthFix" v-if="video.type == 4"></image>
+    </div>
+  </div>
+
+  <div class="js_dialog_wrap" role="dialog" v-if="showEndMask">
+    <div role="button" class="js_close weui-mask" wah-hotarea="click" @tap="hideEndMask"></div>
+    <div class="js_dialog weui-half-screen-dialog weui-half-screen-dialog_show ads">
+      <div class="weui-half-screen-dialog__bd content">{{ video.intro }}</div>
+      <div class="link" v-if="video.type == 2 || video.type == 6">http://www.baidu.com</div>
+      <image src="{{ video.qrcode[0]['url'] }}" class="image" mode="widthFix"
+             v-if="video.type == 3 || video.type == 4 || video.type == 7" show-menu-by-longpress="true"></image>
+      <div class="weui-half-screen-dialog__ft box" v-if="video.type != 3 && video.type != 4 && video.type != 7">
+        <div id="js_wrap_btn_area" class="weui-half-screen-dialog__btn-area" style="visibility: visible;">
+          <button type="button" class="weui-btn weui-btn_primary" @tap="preview">
+            {{ video.btnText ? video.btnText : '点击查看' }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -96,7 +156,7 @@ usingComponents: {
 import wepy from '@wepy/core'
 import store from '@/store'
 import {mapGetters} from '@wepy/x'
-import {getVideo, deleteVideo} from '@/api/video'
+import {deleteVideo, getVideo} from '@/api/video'
 import eventHub from '@/common/eventHub'
 
 wepy.page({
@@ -116,10 +176,9 @@ wepy.page({
     videoNow: 0,
     showMask: false,
     mask: {
-      top: '',
-      height: '',
       default: true
-    }
+    },
+    showEndMask: false,
   },
   // 计算的属性
   computed: {
@@ -144,15 +203,35 @@ wepy.page({
     this.navbar.title = this.video.title
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
-
-    this.mask.top = this.navbar.height
   },
   async onShow() {
     let res = await wx.getSystemInfo()
-
-    this.mask.height = res.windowHeight
   },
   methods: {
+    async hideEndMask() {
+      this.showEndMask = false;
+    },
+    async preview() {
+      this.hideEndMask();
+
+      if (this.video.type == 2 || this.video.type == 6) { // 复制链接
+        await wepy.wx.setClipboardData({
+          data: this.video.link,
+        })
+        await wepy.wx.getClipboardData({})
+        wx.showToast({
+          title: '复制成功'
+        })
+      } else { // 预览
+        wx.previewImage({
+          urls: [this.video.qrcode[0]['url']]
+        })
+      }
+    },
+    showEndTip() {
+      this.showEndMask = true
+      this.playing = false
+    },
     async deleteVideo() {
       // 删除确认
       const res = await wepy.wx.showModal({
@@ -188,22 +267,6 @@ wepy.page({
       })
 
       this.video = videoResponse.data
-    },
-    async previewQrcode() {
-      if (!this.mask.default) { // 显示一次后不再显示
-        return
-      }
-      this.mask.default = false
-
-      await setTimeout(() => {
-        wx.previewImage({
-          urls: [this.video.qrcode[0]['url']]
-        })
-        this.showMask = false
-      }, 8000)
-      // todo 分享两次? 裂变次数达到后不显示蒙层?
-      this.showMask = true
-      this.videoTap()
     },
     async videoTap(e) { // 无语, 动态绑定 video.id 就不行, 真奇怪
       let videoContext = wx.createVideoContext(this.playIndex + '', this) // 这里对应的视频id
@@ -269,10 +332,24 @@ wepy.page({
         this.videoLength = videoLength
         this.videoNow = videoNow
 
-        if (this.sliderValue >= this.video.time) {
-          this.previewQrcode()
+        if (this.sliderValue >= this.video.time
+          && (this.video.type == 4 || this.video.type == 5 || this.video.type == 6 || this.video.type == 7)) {
+          this.showMiddleMask()
         }
       }
+    },
+    async showMiddleMask() {
+      if (!this.mask.default) { // 显示一次后不再显示
+        return
+      }
+      this.mask.default = false
+
+      await setTimeout(() => {
+        this.showMask = false
+        this.videoTap()
+      }, 8000)
+      this.showMask = true
+      this.videoTap()
     },
     // 倒计时
     timeFormat(param) { // 小于 10 的格式化函数

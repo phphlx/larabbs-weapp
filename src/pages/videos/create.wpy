@@ -136,6 +136,69 @@
     </div>
     <div v-if="errors.time" class="weui-cells__tips error-message">{{ errors.time[0] }}</div>
 
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.type}">选择模式</div>
+    <div class="weui-cells weui-cells_radio weui-cells_after-title">
+      <radio-group bindchange="radioChange">
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">1, 结束 (标题 + 按钮</div>
+          <div class="weui-cell__ft">
+            <radio class="weui-check" value="1" checked="{{ form.type == 1 }}"/><i class="weui-icon-checked"></i>
+          </div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">2, 结束 (标题 + 链接 + 按钮</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="2"/><i class="weui-icon-checked"></i></div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">3, 结束 (标题 + 大图</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="3"/><i class="weui-icon-checked"></i></div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">4, 指定时间图, 8s后消失, 结束 （标题 + 大图</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="4"/><i class="weui-icon-checked"></i></div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">5, 指定时间提示, 8s消失， (结束 标题 + 按钮</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="5"/><i class="weui-icon-checked"></i></div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">6, 指定时间提示, 8s消失, (结束 标题 + 链接 + 按钮</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="6"/><i class="weui-icon-checked"></i></div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">7, 指定时间提示, 8s消失, (结束 标题 + 大图</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="7"/><i class="weui-icon-checked"></i></div>
+        </label>
+      </radio-group>
+    </div>
+    <div v-if="errors.type" class="weui-cells__tips error-message">{{ errors.type[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.link}">链接</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.link}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入链接 (仅模式2, 6需要" name="link" v-model="form.link" />
+        </div>
+        <div v-if="errors.link" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.link" class="weui-cells__tips error-message">{{ errors.link[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.btnText}">按钮文字</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.btnText}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="默认为 点击查看" name="btnText" v-model="form.btnText" />
+        </div>
+        <div v-if="errors.btnText" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.btnText" class="weui-cells__tips error-message">{{ errors.btnText[0] }}</div>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareTitle}">分享标题</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareTitle}">
@@ -147,7 +210,7 @@
         </div>
       </div>
     </div>
-    <div v-if="errors.shareTitle" class="weui-cells__tips error-message">{{ errors.shareImg[0] }}</div>
+    <div v-if="errors.shareTitle" class="weui-cells__tips error-message">{{ errors.shareTitle[0] }}</div>
 
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareImg}">分享封面图 (宽高比 5:4)</div>
     <div class="weui-cells weui-cells_after-title">
@@ -198,7 +261,8 @@ wepy.page({
     form: {
       video: [],
       qrcode: [],
-      shareImg: []
+      shareImg: [],
+      type: 1
     },
     errors: {}
   },
@@ -239,6 +303,10 @@ wepy.page({
           time: {
             required: true
           },
+          type: {
+            required: true
+          },
+          btnText: {},
           shareTitle: {
             required: true
           },
@@ -261,6 +329,9 @@ wepy.page({
           },
           time: {
             required: '请填写时间'
+          },
+          type: {
+            required: '请选择模式'
           },
           shareTitle: {
             required: '请输入分享标题'
@@ -314,6 +385,27 @@ wepy.page({
     async deleteShareImg (event) {
       var index = event.$wx.detail.index
       this.form.shareImg.splice(index - 1, 1)
+    },
+    async radioChange(event) {
+      // 选择模式 2 或 6 必须填写链接
+      let val = event.$wx.detail.value;
+      if(val == '2' || val == '6'){
+        this.validatorInstance.addRules({
+          rules: {
+            link: {
+              required: true
+            }
+          },
+          messages: {
+            link: {
+              required: '选择模式 2 或 6，必须输入链接'
+            }
+          }
+        })
+      }else{
+        this.validatorInstance.removeRules(['link'])
+      }
+      this.form.type = val
     },
     // 提交表单
     async submit () {
