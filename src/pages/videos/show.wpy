@@ -131,7 +131,7 @@ slider {
     <div role="button" class="js_close weui-mask" wah-hotarea="click" @tap="hideEndMask"></div>
     <div class="js_dialog weui-half-screen-dialog weui-half-screen-dialog_show ads">
       <div class="weui-half-screen-dialog__bd content">{{ video.intro }}</div>
-      <div class="link" v-if="video.type == 2 || video.type == 6">http://www.baidu.com</div>
+      <div class="link" v-if="video.type == 2 || video.type == 6">{{ video.link }}</div>
       <image src="{{ video.qrcode[0]['url'] }}" class="image" mode="widthFix"
              v-if="video.type == 3 || video.type == 4 || video.type == 7" show-menu-by-longpress="true"></image>
       <div class="weui-half-screen-dialog__ft box" v-if="video.type != 3 && video.type != 4 && video.type != 7">
@@ -212,7 +212,7 @@ wepy.page({
       this.showEndMask = false;
     },
     async preview() {
-      this.hideEndMask();
+      await this.hideEndMask();
 
       if (this.video.type == 2 || this.video.type == 6) { // 复制链接
         await wepy.wx.setClipboardData({

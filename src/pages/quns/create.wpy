@@ -91,6 +91,23 @@
     </div>
     <div v-if="errors.intro" class="weui-cells__tips error-message">{{ errors.intro[0] }}</div>
 
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.type}">选择模式</div>
+    <div class="weui-cells weui-cells_radio weui-cells_after-title">
+      <radio-group bindchange="radioChange">
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">1, 当前页面显示二维码</div>
+          <div class="weui-cell__ft">
+            <radio class="weui-check" value="1" checked="{{ form.type == 1 }}"/><i class="weui-icon-checked"></i>
+          </div>
+        </label>
+        <label class="weui-cell weui-check__label">
+          <div class="weui-cell__bd">2, 打开页面预览二维码</div>
+          <div class="weui-cell__ft"><radio class="weui-check" value="2"/><i class="weui-icon-checked"></i></div>
+        </label>
+      </radio-group>
+    </div>
+    <div v-if="errors.type" class="weui-cells__tips error-message">{{ errors.type[0] }}</div>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.avatar}">头像</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.avatar}">
@@ -198,7 +215,8 @@ wepy.page({
     form: {
       avatar: [],
       qrcode: [],
-      shareImg: []
+      shareImg: [],
+      type: 1
     },
     errors: {}
   },
@@ -233,6 +251,9 @@ wepy.page({
           intro: {
             required: true
           },
+          type: {
+            required: true
+          },
           qrcode: {
             required: true
           },
@@ -256,6 +277,9 @@ wepy.page({
           intro: {
             required: '请输入广告语'
           },
+          type: {
+            required: '请选择模式'
+          },
           qrcode: {
             required: '请上传二维码'
           },
@@ -278,6 +302,9 @@ wepy.page({
           this.errors = errors
         }
       })
+    },
+    async radioChange(event) {
+      this.form.type = event.$wx.detail.value
     },
     async uploadAvatar(event) {
       const { file } = event.$wx.detail

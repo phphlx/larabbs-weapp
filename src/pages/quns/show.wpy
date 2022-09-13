@@ -33,7 +33,7 @@
 .intro {
   text-align: center;
   font-size: 16px;
-  margin-top: 38vh;
+  margin-top: 20vh;
 }
 
 .button-wrap {
@@ -74,16 +74,12 @@
   right: 30px;
 }
 
-.mask {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.6);
-  width: 100vh;
-  left: 0;
+.image {
+  margin-top: 2vh;
 }
 
 .share {
-  width: 600rpx;
-  height: 100vh;
+  width: 80vw;
 }
 </style>
 <template>
@@ -101,8 +97,11 @@
         <div class="intro-wrap">
           <div class="intro">{{ qun.intro }}</div>
         </div>
-        <div class="button-wrap">
+        <div class="button-wrap" v-if="showBtn">
           <button class="weui-btn weui-btn_primary" @tap="previewQrcode">加入</button>
+        </div>
+        <div v-if="showImg" class="image">
+          <image src="{{ qun.qrcode[0]['url'] }}" show-menu-by-longpress="true"></image>
         </div>
       </article>
     </div>
@@ -112,10 +111,12 @@
     </a>
     <image src="/assets/images/delete.png" class="delete-qun" v-if="canDelete" @tap="deleteQun"/>
   </div>
-  <div class="mask" v-if="showMask" style="height:{{mask.height}}px; top: {{mask.top}}px">
+
+  <div role="button" class="js_close weui-mask" v-if="showMask" style="position: fixed; z-index: 999999;">
     <div class="" style="color: white;">
-      <image src="/assets/images/share.png" class="share"></image>
-    </div>
+      <image src="/assets/images/newShare.png" class="share"
+             style="padding-top: {{ navbar.height }}px;" mode="widthFix"></image>
+      </div>
   </div>
 </template>
 <config>
@@ -143,10 +144,10 @@ wepy.page({
     qun: {},
     showMask: false,
     mask: {
-      top: '',
-      height: '',
       default: true
-    }
+    },
+    showImg: false,
+    showBtn: true
   },
   // 计算的属性
   computed: {
@@ -162,9 +163,6 @@ wepy.page({
   },
   async onShow() {
     let res = await wx.getSystemInfo()
-
-    this.mask.height = res.windowHeight
-    this.mask.top = this.navbar.height
   },
   methods: {
     async deleteQun() {
@@ -205,15 +203,15 @@ wepy.page({
     },
     async previewQrcode() {
       if (this.mask.default) {
-        await setTimeout(() => {
-          wx.previewImage({
-            urls: [this.qun.qrcode[0]['url']]
-          })
-          this.showMask = false
-          this.mask.default = false
-        }, 8000)
-        // todo 分享两次? 裂变次数达到后不显示蒙层?
+        this.mask.default = false
         this.showMask = true
+        await setTimeout(() => {
+          if (this.qun.type == 1) {
+            this.showImg = true
+            this.showBtn = false
+          }
+          this.showMask = false
+        }, 8000)
       } else {
         wx.previewImage({
           urls: [this.qun.qrcode[0]['url']]
