@@ -347,7 +347,7 @@ wepy.page({
       await setTimeout(() => {
         this.showMask = false
         this.videoTap()
-      }, 8000)
+      }, 10000)
       this.showMask = true
       this.videoTap()
     },

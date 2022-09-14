@@ -153,6 +153,19 @@
     </div>
     <div v-if="errors.num" class="weui-cells__tips error-message">{{ errors.num[0] }}</div>
 
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.btnText}">按钮文本</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.btnText}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入按钮文本(默认为加入" name="btnText" v-model="form.btnText" />
+        </div>
+        <div v-if="errors.btnText" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.btnText" class="weui-cells__tips error-message">{{ errors.btnText[0] }}</div>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareTitle}">分享标题</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareTitle}">

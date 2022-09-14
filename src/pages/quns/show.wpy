@@ -28,12 +28,12 @@
 
 .intro-wrap {
   position: relative;
+  margin-top: 40vh;
 }
 
 .intro {
   text-align: center;
-  font-size: 16px;
-  margin-top: 20vh;
+  font-size: 20px;
 }
 
 .button-wrap {
@@ -83,10 +83,10 @@
 }
 </style>
 <template>
-  <div class="container">
+  <div class="page">
     <navigation-bar :navbar="navbar"></navigation-bar>
 
-    <div class="page article js_show" tabindex="-1">
+    <div class="article js_show">
       <article class="weui-article">
         <div class="avatar-wrap">
           <image :src="qun.avatar[0]['url']" class="avatar"></image>
@@ -94,14 +94,14 @@
         <div class="name-wrap">
           <div class="name">{{ qun.name }}({{ qun.num }})</div>
         </div>
-        <div class="intro-wrap">
-          <div class="intro">{{ qun.intro }}</div>
-        </div>
-        <div class="button-wrap" v-if="showBtn">
-          <button class="weui-btn weui-btn_primary" @tap="previewQrcode">加入</button>
+        <div class="intro-wrap" style="margin-top: {{ showImg ? '10vh' : '40vh' }}">
+          <div class="intro" v-if="!mask.default">{{ qun.intro }}</div>
+          <button class="weui-btn weui-btn_primary button-wrap" v-if="showBtn" @tap="previewQrcode">
+            {{ mask.default || !qun.btnText ? '加入' : qun.btnText }}
+          </button>
         </div>
         <div v-if="showImg" class="image">
-          <image src="{{ qun.qrcode[0]['url'] }}" show-menu-by-longpress="true"></image>
+          <image src="{{ qun.qrcode[0]['url'] }}" show-menu-by-longpress="true" mode="widthFix"></image>
         </div>
       </article>
     </div>
@@ -114,9 +114,9 @@
 
   <div role="button" class="js_close weui-mask" v-if="showMask" style="position: fixed; z-index: 999999;">
     <div class="" style="color: white;">
-      <image src="/assets/images/newShare.png" class="share"
-             style="padding-top: {{ navbar.height }}px;" mode="widthFix"></image>
-      </div>
+      <image src="/assets/images/qunShare.png" class="share" style="padding-top: {{ navbar.height }}px;"
+             mode="widthFix"></image>
+    </div>
   </div>
 </template>
 <config>
@@ -203,13 +203,13 @@ wepy.page({
     },
     async previewQrcode() {
       if (this.mask.default) {
-        this.mask.default = false
         this.showMask = true
         await setTimeout(() => {
           if (this.qun.type == 1) {
             this.showImg = true
             this.showBtn = false
           }
+          this.mask.default = false
           this.showMask = false
         }, 8000)
       } else {

@@ -78,7 +78,7 @@
     </div>
     <div v-if="errors.title" class="weui-cells__tips error-message">{{ errors.title[0] }}</div>
 
-    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.video}">视频 (文件超过 60M 请使用 handbrake 压缩)</div>
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.video}">视频 (文件过大时请使用 handbrake 压缩)</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.video}">
         <div class="weui-cell__bd">
@@ -154,19 +154,19 @@
           <div class="weui-cell__ft"><radio class="weui-check" value="3"/><i class="weui-icon-checked"></i></div>
         </label>
         <label class="weui-cell weui-check__label">
-          <div class="weui-cell__bd">4, 指定时间图, 8s后消失, 结束 （标题 + 大图</div>
+          <div class="weui-cell__bd">4, 指定时间图, 10s后消失, 结束 （标题 + 大图</div>
           <div class="weui-cell__ft"><radio class="weui-check" value="4"/><i class="weui-icon-checked"></i></div>
         </label>
         <label class="weui-cell weui-check__label">
-          <div class="weui-cell__bd">5, 指定时间提示, 8s消失， (结束 标题 + 按钮</div>
+          <div class="weui-cell__bd">5, 指定时间提示, 10s消失， (结束 标题 + 按钮</div>
           <div class="weui-cell__ft"><radio class="weui-check" value="5"/><i class="weui-icon-checked"></i></div>
         </label>
         <label class="weui-cell weui-check__label">
-          <div class="weui-cell__bd">6, 指定时间提示, 8s消失, (结束 标题 + 链接 + 按钮</div>
+          <div class="weui-cell__bd">6, 指定时间提示, 10s消失, (结束 标题 + 链接 + 按钮</div>
           <div class="weui-cell__ft"><radio class="weui-check" value="6"/><i class="weui-icon-checked"></i></div>
         </label>
         <label class="weui-cell weui-check__label">
-          <div class="weui-cell__bd">7, 指定时间提示, 8s消失, (结束 标题 + 大图</div>
+          <div class="weui-cell__bd">7, 指定时间提示, 10s消失, (结束 标题 + 大图</div>
           <div class="weui-cell__ft"><radio class="weui-check" value="7"/><i class="weui-icon-checked"></i></div>
         </label>
       </radio-group>
