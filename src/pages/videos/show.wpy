@@ -204,9 +204,6 @@ wepy.page({
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
   },
-  async onShow() {
-    let res = await wx.getSystemInfo()
-  },
   methods: {
     async hideEndMask() {
       this.showEndMask = false;
@@ -344,10 +341,12 @@ wepy.page({
       }
       this.mask.default = false
 
-      await setTimeout(() => {
-        this.showMask = false
-        this.videoTap()
-      }, 10000)
+      if (this.video.type == 4) {
+        await setTimeout(() => {
+          this.showMask = false
+          this.videoTap()
+        }, 10000)
+      }
       this.showMask = true
       this.videoTap()
     },
@@ -360,6 +359,14 @@ wepy.page({
     this.updateState = true
   },
   onShareAppMessage() {
+    if (this.video.type == 5 || this.video.type == 6 || this.video.type == 7) {
+      setTimeout(() => {
+        this.showMask = false
+        setTimeout(() => {
+          this.videoTap()
+        }, 3000)
+      }, 3000)
+    }
     return {
       // 标题是话题标题
       title: this.video.shareTitle,

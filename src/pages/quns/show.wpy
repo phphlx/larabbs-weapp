@@ -113,10 +113,8 @@
   </div>
 
   <div role="button" class="js_close weui-mask" v-if="showMask" style="position: fixed; z-index: 999999;">
-    <div class="" style="color: white;">
-      <image src="/assets/images/qunShare.png" class="share" style="padding-top: {{ navbar.height }}px;"
-             mode="widthFix"></image>
-    </div>
+    <image src="/assets/images/qunShare.png" class="share" style="padding-top: {{ navbar.height }}px;"
+           mode="widthFix"></image>
   </div>
 </template>
 <config>
@@ -204,14 +202,6 @@ wepy.page({
     async previewQrcode() {
       if (this.mask.default) {
         this.showMask = true
-        await setTimeout(() => {
-          if (this.qun.type == 1) {
-            this.showImg = true
-            this.showBtn = false
-          }
-          this.mask.default = false
-          this.showMask = false
-        }, 8000)
       } else {
         wx.previewImage({
           urls: [this.qun.qrcode[0]['url']]
@@ -232,6 +222,14 @@ wepy.page({
     this.navbar.showHome = false
   },
   onShareAppMessage() {
+    setTimeout(() => {
+      if (this.qun.type == 1) {
+        this.showImg = true
+        this.showBtn = false
+      }
+      this.mask.default = false
+      this.showMask = false
+    }, 3000)
     return {
       // 标题是话题标题
       title: this.qun.shareTitle,
