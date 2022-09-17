@@ -14,6 +14,16 @@
   width: 100%;
 }
 
+.name {
+  width: 70vw;
+  margin-left: 8px;
+  margin-bottom: 40rpx;
+  color: white;
+  .title {
+    font-size: 1.16em;
+  }
+}
+
 slider {
   margin: 0;
 }
@@ -105,6 +115,10 @@ slider {
            bindplay="updatePlayState" bindtap="videoTap" bindtimeupdate="updateTime" bindended="showEndTip">
     </video>
     <div class="slider-container">
+      <div class="name" @tap="preview">
+        <div class="title">{{ video.adTitle }}</div>
+        <div class="content">{{ video.adContent }}</div>
+      </div>
       <slider bindchange="sliderChange" bindchanging="sliderChanging" step="1" block-size="0" value="{{sliderValue}}"
               backgroundColor="#333" activeColor="#fff" block-color=""/>
     </div>
@@ -209,17 +223,17 @@ wepy.page({
     this.playIconHeight = (wx.getSystemInfoSync().screenHeight + this.navbar.height) / 2
   },
   methods: {
-    async hideEndMask() {
+    hideEndMask() {
       this.showEndMask = false;
     },
     async preview() {
-      await this.hideEndMask();
+      this.hideEndMask();
 
       if (this.video.type == 2 || this.video.type == 6) { // 复制链接
-        await wepy.wx.setClipboardData({
+        wepy.wx.setClipboardData({
           data: this.video.link,
         })
-        await wepy.wx.getClipboardData({})
+        wepy.wx.getClipboardData({})
         wx.showToast({
           title: '复制成功'
         })

@@ -94,6 +94,32 @@
     </div>
     <div v-if="errors.video" class="weui-cells__tips error-message">{{ errors.video[0] }}</div>
 
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.adTitle}">视频页@名字 (12个字内</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.adTitle}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请填写@名字" name="adTitle" v-model="form.adTitle" />
+        </div>
+        <div v-if="errors.adTitle" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.adTitle" class="weui-cells__tips error-message">{{ errors.adTitle[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.adContent}">视频页下部文本内容 (34个字内</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.adContent}">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea content" placeholder="请输入引导语" v-model="form.adContent"></textarea>
+        </div>
+        <div v-if="errors.adContent" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.adContent" class="weui-cells__tips error-message">{{ errors.adContent[0] }}</div>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.intro}">引导语</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.intro}">
@@ -326,6 +352,14 @@ wepy.page({
           video: {
             required: true
           },
+          adTitle: {
+            required: true,
+            maxlength: 13
+          },
+          adContent: {
+            required: true,
+            maxlength: 34
+          },
           intro: {
             required: true
           },
@@ -352,6 +386,12 @@ wepy.page({
           },
           video: {
             required: '没有上传视频'
+          },
+          adTitle: {
+            maxlength: '最多输入12个字, 不包括@'
+          },
+          adContent: {
+            maxlength: '最多输入34个字'
           },
           intro: {
             required: '请输入广告语'
