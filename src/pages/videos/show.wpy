@@ -295,7 +295,7 @@ wepy.page({
         this.updateState = true
       }
     },
-    async updatePlayState(e) {
+    updatePlayState(e) {
       this.playing = true
     },
     // 拖动进度条触发事件
@@ -304,7 +304,9 @@ wepy.page({
         let videoContextPrev = wx.createVideoContext(this.playIndex + '', this)
         videoContextPrev.seek(e.$wx.detail.value / 100 * this.duration)
         this.sliderValue = e.$wx.detail.value
+        this.playing = true
         this.updateState = true
+        videoContextPrev.play();
       }
     },
     sliderChanging(e) {
