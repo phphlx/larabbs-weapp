@@ -71,6 +71,21 @@
       <!-- 邮箱错误信息 -->
       <div v-if="errors.phone" class="weui-cells__tips error-message">{{ errors.phone[0] }}</div>
 
+      <!-- 填写密码 -->
+      <div class="weui-cells__title" :class="{'weui-cell_warn': errors.password}">修改密码</div>
+      <div class="weui-cells weui-cells_after-title">
+        <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.password}">
+          <div class="weui-cell__bd">
+            <input class="weui-input" placeholder="请输入密码 (不填写则不修改)" name="password" v-model="form.password" />
+          </div>
+          <div v-if="errors.password" class="weui-cell__ft">
+            <icon type="warn" size="23" color="#E64340"></icon>
+          </div>
+        </div>
+      </div>
+      <!-- 密码错误信息 -->
+      <div v-if="errors.password" class="weui-cells__tips error-message">{{ errors.password[0] }}</div>
+
       <!-- 填写简介 -->
       <div class="weui-cells__title" :class="{'weui-cell_warn': errors.introduction}">个人简介</div>
       <div class="weui-cells weui-cells_after-title" :class="{'weui-cell_warn': errors.introduction}">
@@ -148,6 +163,9 @@ wepy.page({
           },
           phone: {
             mobile: true
+          },
+          password: {
+            minlength: 6
           }
         },
         messages: {
@@ -156,6 +174,9 @@ wepy.page({
           },
           email: {
             email: '邮箱格式不正确'
+          },
+          password: {
+            minlength: '密码最少 6 位数'
           }
         },
         onMessage: (data) => {
