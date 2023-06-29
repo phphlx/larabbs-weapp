@@ -12,9 +12,9 @@ const checkToken = async () => {
   // 如果 token 过期了，则调用刷新方法
   if (accessToken && new Date().getTime() > expiredAt) {
     try {
-      return store.dispatch('refresh')
+      return await store.dispatch('refresh')
     } catch (err) {
-      return store.dispatch('login')
+      return await store.dispatch('login')
     }
   }
 }
@@ -57,7 +57,7 @@ const request = async (url, options = {}, showLoading = true) => {
     })
   }
 
-  if (response.statusCode === 500) {
+  if (response.statusCode === 500 && response.data.message !== 'Token has expired and can no longer be refreshed') {
     wx.showModal({
       title: '提示',
       content: '服务器错误，请联系管理员或重试'
