@@ -1,0 +1,167 @@
+<style lang="less">
+.error-message {
+  color: #E64340;
+}
+.center {
+
+}
+.weui-article__h1 {
+  padding-top: 20vh;
+  font-weight: bold;
+  font-size: 30px;
+}
+.weui-btn {
+  margin-bottom: 20px;
+}
+.page {
+  padding: 0 10px;
+}
+</style>
+<template>
+  <div class="page">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+    <div class="page__bd">
+      <div>
+        <div class="weui-article__h1">7 天免费测试流程</div>
+        <div class="weui-article__h2 center">第一步: 点击下面按钮注册账号</div>
+        <button class="weui-btn" type="primary" @tap="register">立即注册</button>
+        <div class="weui-article__h2 center">第二步: 把注册账号发给微信客服, 开通七天免费试用会员</div>
+        <div class="weui-article__h2 center">第三步: 淘宝下一单一元的，稍后给您开通七天会员之后，会退给你，我们就图个销量</div>
+        <div class="weui-article__h2 center">第四步: 下载安装 App, 开始使用</div>
+        <button class="weui-btn" type="default" @tap="download">一键转发软件下载</button>
+      </div>
+
+      <!-- 验证码输入模态框 -->
+      <modal class="modal" v-if="modalShow" no-cancel bindconfirm="submit">
+        <div class="weui-form__control-area">
+          <div class="weui-cells__group weui-cells__group_form">
+        <div class="weui-cells__title">注册</div>
+        <div class="weui-cells">
+          <label for="js_input1" class="weui-cell weui-cell_active">
+            <div class="weui-cell__hd {{ errors.phone ? 'weui-cell_warn' : ''}}">
+              <span class="weui-label">用户名</span>
+            </div>
+            <div class="weui-cell__bd">
+              <input id="js_input1" class="weui-input" placeholder="请输入手机号" v-model="form.phone" name="phone">
+            </div>
+          </label>
+
+          <label for="js_input3" class="weui-cell weui-cell_active">
+            <div class="weui-cell__hd {{ (errors.password) ? 'weui-cell_warn' : ''}}">
+              <span class="weui-label">密码</span>
+            </div>
+            <div class="weui-cell__bd">
+              <input id="js_input3" class="weui-input" placeholder="请输入密码" type="password" name="password"
+                     v-model="form.password">
+            </div>
+          </label>
+
+          <div v-if="errors.phone" class="weui-cells__tips error-message">{{ errors.phone[0] }}</div>
+          <div v-if="errors.password" class="weui-cells__tips error-message">{{ errors.password[0] }}</div>
+        </div>
+        </div>
+        </div>
+      </modal>
+    </div>
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: '下载',
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import WeValidator from 'we-validator'
+
+wepy.page({
+  store,
+  data: {
+    // 表单
+    form: {},
+    // 表单错误
+    errors: {},
+    modalShow: false,
+  },
+  onLoad() {
+  },
+  onReady() {
+    this.initValidator()
+  },
+  methods: {
+    initValidator() {
+      // 注册表单验证实例化
+      this.validatorInstance = new WeValidator({
+        multiCheck: true,
+        rules: {
+          phone: {
+            required: true,
+            mobile: true
+          },
+          password: {
+            required: true,
+            minlength: 6
+          }
+        },
+        messages: {
+          phone: {
+            required: '请输入手机号',
+            mobile: '手机号格式不正确'
+          },
+          password: {
+            required: '请填写密码',
+            minlength: '密码最少 6 位数'
+          }
+        },
+        onMessage: (data) => {
+          let errors = {}
+          Object.keys(data).map(function(key) {
+            errors[key] = [data[key].msg]
+          })
+
+          this.errors = errors
+        }
+      })
+    },
+    async register() {
+      this.modalShow = true
+    },
+    // 表单提交
+    async submit() {
+      // 提交之前清空错误信息
+      this.errors = {}
+      if (!this.validatorInstance.checkData(this.form)) {
+        return
+      }
+
+      this.modalShow = false
+      await this.download()
+    },
+    async download() {
+      if (this.form.phone) {
+        await wepy.wx.showModal({
+          title: '注册成功',
+          content: '请将 注册手机号 发给 微信客服 开通下载权限'
+        })
+      } else {
+        await wepy.wx.showModal({
+          content: '请先注册账号'
+        })
+
+        this.modalShow = true
+      }
+    },
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: '一键转发七天免费试用教程',
+      // 路径为话题详情路径
+      path: '/pages/users/temp',
+      // 图片为用户头像
+      imageUrl: "http://www.gongzhonghaoxifen.com/img/software_download.jpg"
+    }
+  }
+})
+</script>

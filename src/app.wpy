@@ -124,6 +124,7 @@ wepy.app({
     'pages/users/me',
     'pages/users/edit',
     'pages/users/show',
+    'pages/users/temp',
     'pages/auth/login',
     'pages/auth/register',
     'pages/quns/create',

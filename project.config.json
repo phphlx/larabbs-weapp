@@ -2,7 +2,7 @@
     "description": "a WePY project",
     "setting": {
         "urlCheck": true,
-        "es6": false,
+        "es6": true,
         "postcss": false,
         "minified": false,
         "babelSetting": {
@@ -11,7 +11,9 @@
             "outputPath": ""
         },
         "minifyWXSS": false,
-        "minifyWXML": false
+        "minifyWXML": false,
+        "ignoreUploadUnusedFiles": true,
+        "enhance": true
     },
     "compileType": "miniprogram",
     "appid": "wx324fe75d4e1077f5",

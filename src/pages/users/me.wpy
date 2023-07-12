@@ -8,6 +8,7 @@
   height: 50px;
   display: block;
   border-radius: 50%;
+  border: 1px dotted deepskyblue;
 }
 .logout {
   margin-top: 30px;
@@ -77,6 +78,12 @@
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
+        <a class="weui-cell weui-cell_access" url="/pages/users/temp">
+          <div class="weui-cell__bd">
+            <div>临时页面</div>
+          </div>
+          <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+        </a>
         </div>
       </div>
       <div class="page__bd page__bd_spacing logout">
@@ -120,10 +127,7 @@ wepy.page({
     this.navbar.title = '我的'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
-  },
-  async onShow() {
-    // 加载的时候如果有用户id
     await this.$store.dispatch('getUser')
-  },
+  }
 })
 </script>

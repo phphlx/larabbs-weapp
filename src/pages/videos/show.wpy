@@ -233,7 +233,6 @@ wepy.page({
         wepy.wx.setClipboardData({
           data: this.video.link,
         })
-        wepy.wx.getClipboardData({})
         wx.showToast({
           title: '复制成功'
         })
