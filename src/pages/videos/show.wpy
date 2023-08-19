@@ -348,7 +348,7 @@ wepy.page({
         this.videoLength = videoLength
         this.videoNow = videoNow
 
-        if (this.sliderValue >= this.video.time
+        if (e.$wx.detail.currentTime >= this.video.time
           && (this.video.type == 4 || this.video.type == 5 || this.video.type == 6 || this.video.type == 7)) {
           this.showMiddleMask()
         }
