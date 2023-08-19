@@ -13,7 +13,8 @@
         "minifyWXSS": false,
         "minifyWXML": false,
         "ignoreUploadUnusedFiles": true,
-        "enhance": true
+        "enhance": true,
+        "compileHotReLoad": false
     },
     "compileType": "miniprogram",
     "appid": "wx324fe75d4e1077f5",
