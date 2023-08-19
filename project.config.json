@@ -11,7 +11,9 @@
             "outputPath": ""
         },
         "minifyWXSS": false,
-        "minifyWXML": false
+        "minifyWXML": false,
+        "enhance": false,
+        "ignoreUploadUnusedFiles": true
     },
     "compileType": "miniprogram",
     "appid": "wxdfc9598a61d7c79a",

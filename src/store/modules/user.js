@@ -68,8 +68,9 @@ const actions = {
     dispatch('getUser')
   },
   async logout ({ commit, state }) {
-    await logout(state.accessToken)
-
+    if (state.accessToken && new Date().getTime() < state.accessTokenExpiredAt) {
+      await logout(state.accessToken)
+    }
     // 清空 storage
     auth.logout()
     commit('resetState')
