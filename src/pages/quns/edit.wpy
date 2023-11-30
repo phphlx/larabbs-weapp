@@ -181,6 +181,19 @@
     </div>
     <div v-if="errors.shareTitle" class="weui-cells__tips error-message">{{ errors.shareTitle[0] }}</div>
 
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareDesc}">分享描述</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareDesc}">
+        <div class="weui-cell__bd">
+          <input class="weui-input" placeholder="请输入分享描述" name="shareDesc" v-model="form.shareDesc" />
+        </div>
+        <div v-if="errors.shareDesc" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.shareDesc" class="weui-cells__tips error-message">{{ errors.shareDesc[0] }}</div>
+
     <div class="weui-cells__title" :class="{'weui-cell_warn': errors.shareImg}">分享封面图 (宽高比 5:4)</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.shareImg}">
@@ -280,6 +293,9 @@ wepy.page({
           shareTitle: {
             required: true
           },
+          shareDesc: {
+            required: true
+          },
           shareImg: {
             required: true
           }
@@ -305,6 +321,9 @@ wepy.page({
           },
           shareTitle: {
             required: '请输入分享标题'
+          },
+          shareDesc: {
+            required: '请输入分享描述'
           },
           shareImg: {
             required: '没有上传分享封面图'
