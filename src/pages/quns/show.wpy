@@ -66,6 +66,14 @@
   right: 30px;
 }
 
+.copy-qun {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 240px;
+  right: 30px;
+}
+
 .edit-qun {
   width: 40px;
   height: 40px;
@@ -106,6 +114,7 @@
       </article>
     </div>
 
+    <image src="/assets/images/copy.png" v-if="canDelete" class="copy-qun" @tap="copyQun"/>
     <a url="/pages/quns/edit?id={{ qun.id }}" v-if="canDelete">
       <image src="/assets/images/edit.png" class="edit-qun"/>
     </a>
@@ -215,6 +224,18 @@ wepy.page({
           urls: [this.qun.qrcode[0]['url']]
         })
       }
+    },
+    async copyQun() {
+      wx.setClipboardData({
+        data: API_URL.substring(0, API_URL.indexOf('api/v1')) + 'quns/' + this.qun.id + '?program=zhensheng',
+        success (res) {
+          wx.showToast({
+            title: '复制成功',
+            icon: 'success',
+            duration: 2000
+          })
+        }
+      })
     }
   },
   onLoad(options) {

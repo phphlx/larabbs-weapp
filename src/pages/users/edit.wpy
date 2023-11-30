@@ -57,11 +57,11 @@
       <div v-if="errors.email" class="weui-cells__tips error-message">{{ errors.email[0] }}</div>
 
       <!-- 填写手机号 -->
-      <div class="weui-cells__title" :class="{'weui-cell_warn': errors.phone}">手机号</div>
+      <div class="weui-cells__title" :class="{'weui-cell_warn': errors.phone}">手机号(可不填</div>
       <div class="weui-cells weui-cells_after-title">
         <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.phone}">
           <div class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入手机号" name="phone" v-model="form.phone" />
+            <input class="weui-input" placeholder="请输入手机号码(仅邮箱也可" name="phone" v-model="form.phone" />
           </div>
           <div v-if="errors.phone" class="weui-cell__ft">
             <icon type="warn" size="23" color="#E64340"></icon>
