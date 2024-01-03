@@ -84,6 +84,12 @@
           </div>
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
+          <a class="weui-cell weui-cell_access" url="/pages/customer/show">
+            <div class="weui-cell__bd">
+              <div>临时页面</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
         </div>
       </div>
       <div class="page__bd page__bd_spacing logout">

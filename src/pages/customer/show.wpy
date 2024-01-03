@@ -1,0 +1,91 @@
+<style lang="less">
+.header {
+  font-size: 24px;
+  color: white;
+  padding-top: 70px;
+  padding-bottom: 10px;
+  background: #132434;
+  text-align: center;
+}
+
+.main {
+  margin-top: 10px;
+  padding: 0 8px;
+  font-size: 20px;
+}
+
+.info {
+  color: #3683E9;
+  padding-left: 30px;
+}
+
+.addr {
+  text-align: center;
+
+  label {
+    color: blue;
+  }
+}
+
+.btn {
+  width: 300px;
+  margin-top: 10px;
+}
+
+.sector2 {
+  color: #FF5252;
+  margin-top: 10px;
+}
+</style>
+<template>
+  <div class="header">群平台七天免费试用流程</div>
+  <div class="main">
+    <div>一：注册账号</div>
+    <div class="info">
+      <div>①, 复制链接，粘贴到手机浏览器打开，注册一个账号</div>
+      <div>②, 账号发给微信客服，开通七天免费试用</div>
+    </div>
+    <div class="addr">群平台网址：<span>{{ config.link }}</span></div>
+    <button class="btn" type="primary" @tap="copyLink">点我复制网址, 粘贴到浏览器打开</button>
+    <div class="sector2">二：淘宝拍一个两元的订单，等下开完会员，客服退给你，免费的我们就图个销量</div>
+  </div>
+</template>
+<config>
+{
+enablePullDownRefresh: true,
+usingComponents: {
+"topic-list": "~@/components/topic-list"
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import {getCustomerConfig} from "@/api/customer"
+
+wepy.page({
+  data: {
+    config: {}
+  },
+  async onLoad() {
+    const responseData = await getCustomerConfig(1, {})
+    this.config = responseData.data
+  },
+  methods: {
+    copyLink() {
+      wx.setClipboardData({
+        data: this.config.link
+      })
+    },
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.config.share_title,
+      // 路径为话题详情路径
+      path: '/pages/customer/show',
+      // 图片为用户头像
+      imageUrl: API_URL.split('/api/v')[0] + '/storage/' + this.config.share_img
+    }
+  }
+})
+</script>

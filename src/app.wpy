@@ -131,6 +131,7 @@ wepy.app({
     'pages/quns/user-index',
     'pages/quns/show',
     'pages/quns/edit',
+    'pages/customer/show',
   ],
   window: {
     navigationStyle: 'custom',

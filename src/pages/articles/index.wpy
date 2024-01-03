@@ -83,7 +83,7 @@ wepy.page({
     this.loadData()
 
     this.navbar = this.$app.$options.globalData.naviData
-    this.navbar.title = '公告'
+    this.navbar.title = '三叉公司公告'
     this.navbar.showBack = getCurrentPages().length > 1
     this.navbar.showHome = false
 
