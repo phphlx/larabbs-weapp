@@ -1,7 +1,7 @@
 import {request} from '@/utils/request'
 
 export function login(data) {
-  return request('weapp/authorizations?program=zhensheng', {
+  return request('weapp/authorizations?program=mengdatong', {
     method: 'post',
     data: data
   })
@@ -45,7 +45,7 @@ export function getVerificationCode(key, code) {
 }
 
 export function register(data) {
-  return request('weapp/users?program=zhensheng', {
+  return request('weapp/users?program=mengdatong', {
     method: 'post',
     data: data
   })
