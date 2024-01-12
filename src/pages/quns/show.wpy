@@ -219,7 +219,7 @@ wepy.page({
     },
     async copyQun() {
       wx.setClipboardData({
-        data: API_URL.substring(0, API_URL.indexOf('api/v1')) + 'quns/' + this.qun.id + '?program=',
+        data: API_URL.substring(0, API_URL.indexOf('api/v1')) + 'quns/' + this.qun.id + '?program=' + PROGRAM,
         success (res) {
           wx.showToast({
             title: '复制成功',
