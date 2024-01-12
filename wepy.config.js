@@ -35,6 +35,7 @@ module.exports = {
   plugins: [
     DefinePlugin({
       API_URL: prod ? '"https://xcx.gongzhonghaoxifen.com/api/v1/"' : '"http://larabbs.test/api/v1/"',
+      PROGRAM: "'mengdatong'"
     }),
     PluginUglifyjs({
       // options
