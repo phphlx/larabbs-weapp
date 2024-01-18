@@ -91,6 +91,20 @@
             <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </a>
         </div>
+        <div v-if="isLoggedIn">
+          <a class="weui-cell weui-cell_access" url="/pages/tools/time">
+            <div class="weui-cell__bd" url="">
+              <div class="weui-cell__bd">时间戳转换</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+          <a class="weui-cell weui-cell_access" url="/pages/tools/color">
+            <div class="weui-cell__bd" url="">
+              <div class="weui-cell__bd">16进制/rgb颜色互相转换</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+        </div>
       </div>
       <div class="page__bd page__bd_spacing logout">
         <button class="weui-btn" type="warn" v-if="isLoggedIn" @tap="logout">退出登录</button>

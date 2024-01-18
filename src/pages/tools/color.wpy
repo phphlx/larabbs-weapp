@@ -1,0 +1,121 @@
+<style lang="less">
+.content {
+  height: 5.3em;
+}
+.error-message {
+  color: #E64340;
+}
+</style>
+<template>
+  <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.color}">输入颜色值</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.color}">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea content" placeholder="1, 输入16进制或rgb颜色 2, 点击转换 3, 点击复制按钮 复制结果"
+                    v-model="color"></textarea>
+        </div>
+        <div v-if="errors.color" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.color" class="weui-cells__tips error-message">{{ errors.color[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.result}">结果</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.result}">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea content" placeholder="点击复制按钮 复制结果" v-model="result"></textarea>
+        </div>
+        <div v-if="errors.result" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.result" class="weui-cells__tips error-message">{{ errors.result[0] }}</div>
+
+    <div class="button-sp-area">
+      <button class="weui-btn mini-btn" type="primary" @tap="transfer">转换</button>
+      <button class="weui-btn mini-btn" type="default" @tap="copy">复制</button>
+    </div>
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: '制作',
+usingComponents: {
+"navigation-bar": "~@/components/navigation-bar",
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import { mapGetters } from '@wepy/x'
+
+wepy.page({
+  store,
+  computed: {
+    // 用户信息
+    ...mapGetters(['isLoggedIn'])
+  },
+  data: {
+    navbar: {},
+    color: '',
+    result: '',
+    errors: {}
+  },
+  onLoad(options) {
+    // 未登录跳转到登录页面
+    if (!this.isLoggedIn) {
+      wx.navigateTo({
+        url: '/pages/auth/login'
+      })
+    }
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '颜色转化工具'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
+  },
+  methods: {
+    transfer() {
+      let reg = /^(rgb|RGB)/;
+      if(!reg.test(this.color)){
+        this.result = this.hexToRGB(this.color)
+      } else {
+        this.result = this.RGBToHex(this.color)
+      }
+    },
+    RGBToHex (str) {
+        let reg = /^(rgb|RGB)/;
+        if(!reg.test(str)){return;}
+        let arr = str.slice(4, str.length-1).split(",")
+        let color = '#';
+        for(let i=0;i<arr.length;i++){
+          let t = Number(arr[i]).toString(16)
+          if(t == "0"){   //如果为“0”的话，需要补0操作,否则只有5位数
+            t =  t + "0"
+          }
+          color += t;
+        }
+        return color;
+    },
+    hexToRGB(hex) {
+      let hexx = hex.replace('#', '0x');
+      let r = hexx >> 16;
+      let g = hexx >> 8 & 0xff;
+      let b = hexx & 0xff;
+      return `rgb(${r}, ${g}, ${b})`;
+    },
+    copy() {
+      wx.setClipboardData({
+        data: this.result
+      })
+    }
+  }
+})
+</script>
