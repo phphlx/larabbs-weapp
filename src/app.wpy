@@ -130,6 +130,8 @@ wepy.app({
     'pages/quns/user-index',
     'pages/quns/show',
     'pages/quns/edit',
+    'pages/tools/time',
+    'pages/tools/color',
   ],
   window: {
     navigationStyle: 'custom',

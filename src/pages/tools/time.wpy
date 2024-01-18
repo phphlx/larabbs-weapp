@@ -1,0 +1,112 @@
+<style lang="less">
+.content {
+  height: 5.3em;
+}
+.error-message {
+  color: #E64340;
+}
+</style>
+<template>
+  <div class="page__bd">
+    <navigation-bar :navbar="navbar"></navigation-bar>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.time}">输入时间或时间戳</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.time}">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea content" placeholder="1, 输入时间或时间戳 2, 点击转换 3, 点击复制按钮 复制结果"
+                    v-model="time"></textarea>
+        </div>
+        <div v-if="errors.time" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.time" class="weui-cells__tips error-message">{{ errors.time[0] }}</div>
+
+    <div class="weui-cells__title" :class="{'weui-cell_warn': errors.result}">结果</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell weui-cell_input" :class="{'weui-cell_warn': errors.result}">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea content" placeholder="点击复制按钮 复制结果" v-model="result"></textarea>
+        </div>
+        <div v-if="errors.result" class="weui-cell__ft">
+          <icon type="warn" size="23" color="#E64340"></icon>
+        </div>
+      </div>
+    </div>
+    <div v-if="errors.result" class="weui-cells__tips error-message">{{ errors.result[0] }}</div>
+
+    <div class="button-sp-area">
+      <button class="weui-btn mini-btn" type="primary" @tap="transfer">转换</button>
+      <button class="weui-btn mini-btn" type="default" @tap="copy">复制</button>
+    </div>
+  </div>
+</template>
+<config>
+{
+navigationBarTitleText: '制作',
+usingComponents: {
+"navigation-bar": "~@/components/navigation-bar",
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import store from '@/store'
+import { mapGetters } from '@wepy/x'
+
+wepy.page({
+  store,
+  computed: {
+    // 用户信息
+    ...mapGetters(['isLoggedIn'])
+  },
+  data: {
+    navbar: {},
+    time: '',
+    result: '',
+    errors: {}
+  },
+  onLoad(options) {
+    // 未登录跳转到登录页面
+    if (!this.isLoggedIn) {
+      wx.navigateTo({
+        url: '/pages/auth/login'
+      })
+    }
+
+    this.navbar = this.$app.$options.globalData.naviData
+    this.navbar.title = '时间转化工具'
+    this.navbar.showBack = getCurrentPages().length > 1
+    this.navbar.showHome = false
+  },
+  methods: {
+    transfer() {
+      if (this.time.indexOf('1') === 0) {
+        if (this.time.length < 11) {
+          this.time = this.time * 1000
+        }
+        let date = new Date(this.time * 1)
+        let year = date.getFullYear()
+        let month = this.padding0(date.getMonth() + 1)
+        let dateString = this.padding0(date.getDate())
+        let hours = this.padding0(date.getHours())
+        let minutes = this.padding0(date.getMinutes())
+        let seconds = this.padding0(date.getSeconds())
+        this.result = year + '-' + month + '-' + dateString + ' ' + hours + ':' + minutes + ':' + seconds
+      } else {
+        this.result = new Date(this.time).getTime()
+      }
+    },
+    copy() {
+      wx.setClipboardData({
+        data: this.result
+      })
+    },
+    padding0(param) { // 小于 10 的格式化函数
+      return param < 10 ? '0' + param : `${param}`
+    }
+  }
+})
+</script>
