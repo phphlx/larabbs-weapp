@@ -132,6 +132,7 @@ wepy.app({
     'pages/quns/show',
     'pages/quns/edit',
     'pages/customer/show',
+    'pages/customer/p-resource',
     'pages/tools/time',
     'pages/tools/color',
   ],
