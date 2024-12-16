@@ -283,7 +283,7 @@ wepy.page({
       this.video = videoResponse.data
     },
     async videoTap(e) { // 无语, 动态绑定 video.id 就不行, 真奇怪
-      let videoContext = wx.createVideoContext(this.playIndex + '', this) // 这里对应的视频id
+      let videoContext = wx.createVideoContext(this.playIndex + '') // 这里对应的视频id
       if (this.playing) {
         videoContext.pause()
         this.playing = false
@@ -365,8 +365,8 @@ wepy.page({
         this.videoTap()
       }, 10000)
 
-      this.showMask = true
       this.videoTap()
+      this.showMask = true
     },
     // 倒计时
     timeFormat(param) { // 小于 10 的格式化函数
