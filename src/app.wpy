@@ -123,7 +123,6 @@ wepy.app({
     'pages/videos/edit',
     'pages/users/me',
     'pages/users/edit',
-    'pages/users/show',
     'pages/auth/login',
     'pages/auth/register',
     'pages/quns/create',
@@ -132,6 +131,7 @@ wepy.app({
     'pages/quns/edit',
     'pages/tools/time',
     'pages/tools/color',
+    'pages/customer/show',
   ],
   window: {
     navigationStyle: 'custom',

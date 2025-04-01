@@ -1,0 +1,178 @@
+<style lang="less">
+.header {
+  font-size: 24px;
+  color: white;
+  padding-top: 80px;
+  padding-bottom: 10px;
+  background: #132434;
+  text-align: center;
+}
+
+.main {
+  padding: 0 8px;
+  padding-top: 10px;
+  font-size: 18px;
+  background-color: black;
+}
+
+.info {
+  color: #3683E9;
+  padding-left: 30px;
+}
+
+.addr {
+  text-align: center;
+
+  label {
+    color: blue;
+  }
+}
+
+.btn {
+  width: 300px;
+  margin-top: 10px;
+}
+
+.sector2 {
+  color: #FF5252;
+  margin-top: 10px;
+}
+
+.title {
+  font-size: 20px;
+  color: pink;
+  font-weight: bold;
+  padding-top: 14px;
+  padding-bottom: 8px;
+  text-align: center;
+}
+
+.content {
+  color: white;
+}
+
+.box {
+  color: deepskyblue;
+  text-align: center;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding-top: 4px;
+  padding-bottom: 20px;
+  width: 100%;
+  background-color: #132434;
+  color: white;
+  text-align: center;
+
+  .wechat-box {
+    display: inline-block;
+    width: 50%;
+
+    .wechat {
+      color: deepskyblue;
+    }
+  }
+
+  .copy {
+    display: inline-block;
+    width: 50%;
+    color: palevioletred;
+  }
+}
+
+.wechat_img {
+  display: block;
+  margin: 0 auto;
+  height: 300px;
+}
+
+.tips {
+  color: slategrey;
+  text-align: center;
+}
+
+.img {
+  display: block;
+  height: 560px;
+  margin: 0 auto;
+  margin-top: 8px;
+}
+
+.imgLast {
+  display: block;
+  margin: 0 auto;
+  margin-top: 10px;
+  //width: 100%;
+  height: 291px;
+}
+
+.none {
+  height: 80px;
+}
+
+</style>
+<template>
+  <div class="header">如何用群裂变传播技术让你每天增加10000+客户</div>
+  <div class="main">
+    <div class="title">裂变技术让你每天增加一万客户</div>
+    <div class="content">我们是专门做获客软件的，目前开发了一种群裂变推广技术，可以让你的产品一天被十几万人看到，一天增加几百上千客户，如果您平时缺少客户，有获客需求，您可以加我了解一下，了解体验不收费。</div>
+    <div class="title">获客软件效果怎么样</div>
+    <div class="content">日均获客1000+，全自动获客，被动获客，精准引流，短时间几万精准粉丝，或者用户。</div>
+    <div class="title">支持什么行业和平台</div>
+    <div class="content">什么行业都可以，本地获客和全国获客都可以做，支持所有平台，抖音快手，小红书，短视频，微信，QQ，都可以做，只要是您有获客需求，我们都能做。</div>
+    <div class="title">如何了解体验</div>
+    <div class="content">加技术客服微信，了解体验案例演示和效果。</div>
+    <div class="box">技术客服微信号：<span class="wechat">{{ config.link }}</span></div>
+    <image src="{{ wechat_img }}" alt="" class="wechat_img" show-menu-by-longpress="true"></image>
+    <div class="tips">(↑长按二维码添加好友↑)</div>
+    <div class="title">以下是真实效果展示</div>
+    <image src="/assets/images/result1.jpg" alt="" class="img"></image>
+    <image src="/assets/images/result2.jpg" alt="" class="img"></image>
+    <image src="/assets/images/result3.png" alt="" class="imgLast"></image>
+    <div class="none"></div>
+    <div class="footer" @tap="copyLink"><span class="wechat-box">微信号: <span class="wechat">{{ config.link }}</span></span><span class="copy" >{{ button }}</span></div>
+  </div>
+</template>
+<config>
+{
+enablePullDownRefresh: false
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import {getCustomerConfig} from "@/api/customer"
+
+wepy.page({
+  data: {
+    config: {},
+    wechat_img: "",
+    button: "点我复制微信号"
+  },
+  async onLoad() {
+    const responseData = await getCustomerConfig(3, {});
+    this.config = responseData.data;
+    this.wechat_img = API_URL.split('/api/v')[0] + '/storage/' + this.config.wechat_img;
+  },
+  methods: {
+    copyLink() {
+      wx.setClipboardData({
+        data: this.config.link
+      });
+      this.button = "粘贴到微信搜索添加";
+    }
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.config.share_title,
+      // 路径为话题详情路径
+      path: '/pages/customer/show',
+      // 图片为用户头像
+      imageUrl: API_URL.split('/api/v')[0] + '/storage/' + this.config.share_img
+    }
+  }
+})
+</script>

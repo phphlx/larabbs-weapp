@@ -9,6 +9,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "pages/customer/show",
+                    "pathName": "pages/customer/show",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "summer视频列表页",
                     "pathName": "pages/videos/user-index",
                     "query": "id=1",

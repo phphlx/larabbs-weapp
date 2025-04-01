@@ -3,15 +3,18 @@
   position: relative;
   margin-right: 10px;
 }
+
 .avatar {
   width: 50px;
   height: 50px;
   display: block;
   border-radius: 50%;
 }
+
 .logout {
   margin-top: 30px;
 }
+
 .introduction {
   font-size: 13px;
   color: #888888;
@@ -19,7 +22,7 @@
 </style>
 <template>
   <div class="page">
-    <div class="page__bd" >
+    <div class="page__bd">
       <navigation-bar :navbar="navbar"></navigation-bar>
 
       <div class="weui-cells weui-cells_after-title">
@@ -46,37 +49,43 @@
           <div class="weui-cell__ft weui-cell__ft_in-access"></div>
         </a>
         <div v-if="user.member">
-<!--        <a class="weui-cell weui-cell_access" url="/pages/notifications/index">-->
-<!--          <div class="weui-cell__bd">-->
-<!--            <div style="display: inline-block; vertical-align: middle">我的消息</div>-->
-<!--            <div class="weui-badge" style="margin-left: 5px;" v-if="unreadCount">{{ unreadCount }}</div>-->
-<!--          </div>-->
-<!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
-<!--        </a>-->
-<!--        <a class="weui-cell weui-cell_access" url="{{ isLoggedIn ? '/pages/topics/user-index?id='+ user.id : '' }}">-->
-<!--          <div class="weui-cell__bd" url="">-->
-<!--            <div class="weui-cell__bd">我的话题</div>-->
-<!--          </div>-->
-<!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
-<!--        </a>-->
-<!--        <a class="weui-cell weui-cell_access" url="/pages/replies/user-index?id={{user.id}}">-->
-<!--          <div class="weui-cell__bd" url="">-->
-<!--            <div class="weui-cell__bd">我的回复</div>-->
-<!--          </div>-->
-<!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
-<!--        </a>-->
-        <a class="weui-cell weui-cell_access" url="/pages/videos/user-index?id={{user.id}}">
-          <div class="weui-cell__bd" url="">
-            <div class="weui-cell__bd">我的内容</div>
-          </div>
-          <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-        </a>
-        <a class="weui-cell weui-cell_access" url="/pages/quns/user-index?id={{user.id}}">
-          <div class="weui-cell__bd" url="">
-            <div class="weui-cell__bd">我的group</div>
-          </div>
-          <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-        </a>
+          <!--        <a class="weui-cell weui-cell_access" url="/pages/notifications/index">-->
+          <!--          <div class="weui-cell__bd">-->
+          <!--            <div style="display: inline-block; vertical-align: middle">我的消息</div>-->
+          <!--            <div class="weui-badge" style="margin-left: 5px;" v-if="unreadCount">{{ unreadCount }}</div>-->
+          <!--          </div>-->
+          <!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
+          <!--        </a>-->
+          <!--        <a class="weui-cell weui-cell_access" url="{{ isLoggedIn ? '/pages/topics/user-index?id='+ user.id : '' }}">-->
+          <!--          <div class="weui-cell__bd" url="">-->
+          <!--            <div class="weui-cell__bd">我的话题</div>-->
+          <!--          </div>-->
+          <!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
+          <!--        </a>-->
+          <!--        <a class="weui-cell weui-cell_access" url="/pages/replies/user-index?id={{user.id}}">-->
+          <!--          <div class="weui-cell__bd" url="">-->
+          <!--            <div class="weui-cell__bd">我的回复</div>-->
+          <!--          </div>-->
+          <!--          <div class="weui-cell__ft weui-cell__ft_in-access"></div>-->
+          <!--        </a>-->
+          <a class="weui-cell weui-cell_access" url="/pages/videos/user-index?id={{user.id}}">
+            <div class="weui-cell__bd" url="">
+              <div class="weui-cell__bd">我的内容</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+          <a class="weui-cell weui-cell_access" url="/pages/quns/user-index?id={{user.id}}">
+            <div class="weui-cell__bd" url="">
+              <div class="weui-cell__bd">我的group</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+          <a v-if="user.email_verified_at" class="weui-cell weui-cell_access" url="/pages/customer/show">
+            <div class="weui-cell__bd" url="">
+              <div class="weui-cell__bd">临时页面</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
         </div>
         <div v-if="isLoggedIn">
           <a class="weui-cell weui-cell_access" url="/pages/tools/time">
@@ -109,7 +118,7 @@ usingComponents: {
 <script>
 import wepy from '@wepy/core'
 import store from '@/store'
-import { mapGetters } from '@wepy/x'
+import {mapGetters} from '@wepy/x'
 import syncBadge from '@/mixins/sync-badge'
 
 wepy.page({
@@ -120,10 +129,11 @@ wepy.page({
   },
   methods: {
     // 退出
-    async logout () {
+    async logout() {
       try {
         await this.$store.dispatch('logout')
-      } catch (err) {}
+      } catch (err) {
+      }
     }
   },
   data: {
