@@ -70,11 +70,11 @@ wepy.page({
   },
   onLoad(options) {
     // 未登录跳转到登录页面
-    if (!this.isLoggedIn) {
-      wx.navigateTo({
-        url: '/pages/auth/login'
-      })
-    }
+    // if (!this.isLoggedIn) {
+    //   wx.navigateTo({
+    //     url: '/pages/auth/login'
+    //   })
+    // }
 
     this.navbar = this.$app.$options.globalData.naviData
     this.navbar.title = '颜色转化工具'

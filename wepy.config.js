@@ -35,7 +35,7 @@ module.exports = {
   plugins: [
     DefinePlugin({
       API_URL: prod ? '"https://xcx.gongzhonghaoxifen.com/api/v1/"' : '"http://larabbs.test/api/v1/"',
-      PROGRAM: "'feiliya'"
+      PROGRAM: "'sanchaji_mini_tool'"
     }),
     PluginUglifyjs({
       // options

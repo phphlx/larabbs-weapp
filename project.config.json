@@ -14,10 +14,11 @@
         "minifyWXML": false,
         "enhance": false,
         "ignoreUploadUnusedFiles": true,
+        "compileHotReLoad": false,
         "packNpmRelationList": []
     },
     "compileType": "miniprogram",
-    "appid": "wx0454f3a7b643d738",
+    "appid": "wx567a9bbb793e8f3b",
     "projectname": "larabbs",
     "miniprogramRoot": "weapp/",
     "libVersion": "2.25.2",
