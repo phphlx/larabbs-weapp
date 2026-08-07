@@ -1,0 +1,124 @@
+<style lang="less">
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding-top: 70px;
+  padding-bottom: 10px;
+  background: #132434;
+  text-align: center;
+}
+
+.main {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info {
+  color: #3683E9;
+  text-indent: 2em;
+  padding-bottom: 2em;
+}
+
+video {
+  width: 100%;
+  height: 600px;
+  text-indent: initial;
+}
+
+.video {
+  text-indent: initial;
+}
+</style>
+<template>
+  <div class="header">AI自动涨客户系统介绍</div>
+  <div class="main">
+    <div class="info">
+      <div>下面是【AI自动涨客户关主系统】详细介绍视频</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link1 }}" controls></video>
+      </div>
+    </div>
+
+    <div>【AI自动涨客户关主系统】,包含三大模块</div>
+    <div class="info">
+      <div>1.短视频AI自动涨客户【用软件让你的睛准客户主动关主你】</div>
+      <div>2.直播间自动涨客户功能【利用软件，让睛准客户会主动进去你的直播间】</div>
+      <div>3.【抖音和快手小红书】无限私信功能【群发私信不再限制次数】</div>
+      <div>这个软件比较适合,抖音快手和小红书,视频号，快速涨客户涨关主。效果很好。</div>
+    </div>
+
+    <div>我先给您讲解一下，咱们的软件，做【抖音/小红书】自动涨客户关主的原理。</div>
+    <div class="info">
+      <div>第一步，用咱们的AI系统自动给你刷选几十万个您的睛准意向用户。</div>
+      <div>第二步：用我们的软件不断地和这些几十万个用户营销广告互动。</div>
+      <div>第三步：通过营销广告，短时间让几万有购买力的睛准客户主动关主你。</div>
+      <div>我给你发一个我们的软件截图功能表，您可以详细了解一下。</div>
+      <div v-if="config.created_at" class="video">
+        <image src="{{ config.link2 }}" mode="widthFix" style="width: 100%;"></image>
+      </div>
+    </div>
+
+    <div>咱们这个软件也有直播间自动睛准推琉功能，就是说在你直播的同时，可以让符合你行业的睛准客户自动到你的直播间里去，原理是这样的。</div>
+    <div class="info">
+      <div>首先把我们的软件挂在你的同行的直播间，在你开播的时候启动我们的软件，通过我们的软件操作，让你同行的直播间客户，自动吸引推荐到你的直播间里去。</div>
+      <div>可以看下面这个软件界面截图，您可以看一下，就理解了。</div>
+      <div v-if="config.created_at" class="video">
+        <image src="{{ config.link3 }}" mode="widthFix" style="width: 100%;"></image>
+      </div>
+    </div>
+
+    <div>我们最近刚更新了一个重磅级功能，无限丝信功能，可以突破平台丝信数量,可以做到无限丝信，只要用我们的软件,再按照系统人员指导，每天可达到几百上千甚至没有上限。抖音快手小红薯都能用,我给你发个视频您可以看一下</div>
+    <div class="info">
+      <div>目前抖音快手小红书,都可以用这个无限丝信软件，这个系统是全网独家的。</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link4 }}"></video>
+      </div>
+    </div>
+  </div>
+</template>
+<config>
+{
+enablePullDownRefresh: true,
+usingComponents: {
+"topic-list": "~@/components/topic-list"
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import {getCustomerConfig} from "@/api/customer"
+
+wepy.page({
+  data: {
+    config: {}
+  },
+  async onLoad() {
+    const responseData = await getCustomerConfig(5, {})
+    this.config = responseData.data
+    this.config.link1 = this.config.link.split('@')[0]
+    this.config.link2 = this.config.link.split('@')[1]
+    this.config.link3 = this.config.link.split('@')[2]
+    this.config.link4 = this.config.link.split('@')[3]
+  },
+  methods: {
+    copyLink() {
+      wx.setClipboardData({
+        data: this.config.link
+      })
+    },
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.config.share_title,
+      // 路径为话题详情路径
+      path: '/pages/users/ai',
+      // 图片为用户头像
+      imageUrl: API_URL.split('/api/v')[0] + '/storage/' + this.config.share_img
+    }
+  }
+})
+</script>

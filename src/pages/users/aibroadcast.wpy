@@ -1,0 +1,101 @@
+<style lang="less">
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding-top: 70px;
+  padding-bottom: 10px;
+  background: #132434;
+  text-align: center;
+}
+
+.main {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info {
+  color: #3683E9;
+  text-indent: 2em;
+  padding-bottom: 2em;
+}
+
+video {
+  width: 100%;
+  height: 600px;
+  text-indent: initial;
+}
+
+.video {
+  text-indent: initial;
+}
+</style>
+<template>
+  <div class="header">AI自动推琉自热系统介绍</div>
+  <div class="main">
+    <div class="info">
+      <div>我们新上了一款超牛逼软件，【AI自动推琉自热系统】系统，专门针对一些客户发布了作品没有琉量，软件可以让你的作品不花钱推琉,直接上热门,7-15天,让作品琉量倍增几倍到几十倍，还可以快速给作品排名上首页，软件主要针对，抖音，快手，小红薯，视频号，公众号，小程序和百度和微软edge浏览器蓷广。</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link1 }}" controls></video>
+      </div>
+    </div>
+
+    <div class="info">
+      <div>针对客户不会发作品文案视频，不会发布作品的问题，我们开发了一套【营销AI作品一键发布系统】，让你动动手，自动生成视频或者文章文案，一键式生成，傻瓜式操作。</div>
+      <div v-if="config.created_at" class="video">
+        <image src="{{ config.link2 }}" mode="widthFix" style="width: 100%;"></image>
+      </div>
+    </div>
+
+    <div>利用我们自己的训练的AI大模型，一键生成你所需要的带有你广告的视频或者文案，在符合平台要求的基础上，利用我们用营销数据训练的大模型，自动规避敏感广告词，并且提高过审概率</div>
+    <div class="info">
+      <div>这样既解决了你想宣传你的产品或者服务，不会制作宣传文案的问题，又解决了您发布的作品没有琉量的问题，我们这个是综合性的系统。</div>
+    </div>
+
+  </div>
+</template>
+<config>
+{
+enablePullDownRefresh: true,
+usingComponents: {
+"topic-list": "~@/components/topic-list"
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import {getCustomerConfig} from "@/api/customer"
+
+wepy.page({
+  data: {
+    config: {}
+  },
+  async onLoad() {
+    const responseData = await getCustomerConfig(6, {})
+    this.config = responseData.data
+    this.config.link1 = this.config.link.split('@')[0]
+    this.config.link2 = this.config.link.split('@')[1]
+    this.config.link3 = this.config.link.split('@')[2]
+    this.config.link4 = this.config.link.split('@')[3]
+  },
+  methods: {
+    copyLink() {
+      wx.setClipboardData({
+        data: this.config.link
+      })
+    },
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.config.share_title,
+      // 路径为话题详情路径
+      path: '/pages/users/aibroadcast',
+      // 图片为用户头像
+      imageUrl: API_URL.split('/api/v')[0] + '/storage/' + this.config.share_img
+    }
+  }
+})
+</script>

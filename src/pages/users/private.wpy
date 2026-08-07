@@ -1,0 +1,104 @@
+<style lang="less">
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding-top: 70px;
+  padding-bottom: 10px;
+  background: #132434;
+  text-align: center;
+}
+
+.main {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info {
+  color: #3683E9;
+  text-indent: 2em;
+  padding-bottom: 2em;
+}
+
+video {
+  width: 100%;
+  height: 600px;
+  text-indent: initial;
+}
+
+.video {
+  text-indent: initial;
+}
+</style>
+<template>
+  <div class="header">私域烈变营销系统介绍</div>
+  <div class="main">
+    <div>我这边有一套【微信私域烈变营销系统】，比较适合您这个行业，每天可以让几百睛准客户主动加你，稍等，我给你发一个2分钟的介绍文件，您可以看一下了解一下，系统是如何做到每天让几百真实客户主动找你的。</div>
+    <div class="info">
+      <div>下面是A套餐烈变系统的介绍，您可以先看一下，下面是个介绍视频</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link1 }}" controls></video>
+      </div>
+    </div>
+
+    <div class="info">
+      <div>有了烈变系统，没有大量的群资源也不行，为了解决客户的困扰，我们有一个微信群资源平台，每天更新大量睛准微信群，您可以根据自己的行业选择合适的微信群，把带有你广告的烈变视频，投放到睛准群里面去，我给您发个视频，您看一下我们的群平台。</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link2 }}"></video>
+      </div>
+    </div>
+
+    <div class="info">
+      <div>下面是系统介绍视频</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link3 }}"></video>
+      </div>
+    </div>
+
+  </div>
+</template>
+<config>
+{
+enablePullDownRefresh: true,
+usingComponents: {
+"topic-list": "~@/components/topic-list"
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import {getCustomerConfig} from "@/api/customer"
+
+wepy.page({
+  data: {
+    config: {}
+  },
+  async onLoad() {
+    const responseData = await getCustomerConfig(7, {})
+    this.config = responseData.data
+    this.config.link1 = this.config.link.split('@')[0]
+    this.config.link2 = this.config.link.split('@')[1]
+    this.config.link3 = this.config.link.split('@')[2]
+    this.config.link4 = this.config.link.split('@')[3]
+  },
+  methods: {
+    copyLink() {
+      wx.setClipboardData({
+        data: this.config.link
+      })
+    },
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.config.share_title,
+      // 路径为话题详情路径
+      path: '/pages/users/private',
+      // 图片为用户头像
+      imageUrl: API_URL.split('/api/v')[0] + '/storage/' + this.config.share_img
+    }
+  }
+})
+</script>

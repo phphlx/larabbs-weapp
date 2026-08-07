@@ -1,0 +1,108 @@
+<style lang="less">
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  padding-top: 70px;
+  padding-bottom: 10px;
+  background: #132434;
+  text-align: center;
+}
+
+.main {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info {
+  color: #3683E9;
+  text-indent: 2em;
+  padding-bottom: 2em;
+}
+
+video {
+  width: 100%;
+  height: 600px;
+}
+
+.video {
+  text-indent: initial;
+}
+</style>
+<template>
+  <div class="header">精准荻客系统介绍</div>
+  <div class="main">
+    <div>我们的软件分为三大板块</div>
+    <div class="info">
+      <div>1, 微信私域烈变系统[用烈变的方式让你每天加几百真实客户]</div>
+      <div>2, AI自动涨客户系统[给你自动涨客户关主增加真实客户]</div>
+      <div>3, 自动堆流自动上热门系统[不需要花【米】让你的作品短时间上热门]</div>
+    </div>
+    <div>第一:微信烈变系统【用烈变的方式让你每天加几百真实客户】</div>
+    <div class="info">
+      <div>首先我们给你提供一种烈变,让别人看了你的广告就要转发的技术,让你的广告短时间被几万人甚至十几万人看到,每天几百精准客户，下面视频是详细的软件讲解</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link1 }}" controls></video>
+      </div>
+    </div>
+    <div>第二:AI自动涨客户系统[给你自动涨客户增加真实用户]</div>
+    <div class="info">
+      <div>我们可以做到,让你的抖音快手小红书,短期获得几万芬丝+,下面是视频介绍,您可以看一下</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link2 }}" controls></video>
+      </div>
+    </div>
+    <div>第三：自动堆流自动上热门系统[不需要花【米】让你的作品短时间上热门]</div>
+    <div class="info">
+      <div>我们新上了一款超牛逼软件，【AI自动堆流自热系统】技术，专门针对一些客户发布了作品没有琉量，软件可以让你的作品不花钱堆流,直接上热门,7-15天,让作品流量倍增几倍到几十倍，还可以快速给作品排名上首页，软件主要针对，抖音，快手，小红薯，视频号，公众号，小程序和百度和微软edge浏览器堆广。</div>
+      <div v-if="config.created_at" class="video">
+        <video src="{{ config.link3 }}" controls></video>
+      </div>
+    </div>
+  </div>
+</template>
+<config>
+{
+enablePullDownRefresh: true,
+usingComponents: {
+"topic-list": "~@/components/topic-list"
+}
+}
+</config>
+<script>
+import wepy from '@wepy/core'
+import {getCustomerConfig} from "@/api/customer"
+
+wepy.page({
+  data: {
+    config: {}
+  },
+  async onLoad() {
+    const responseData = await getCustomerConfig(4, {})
+    this.config = responseData.data
+    this.config.link1 = this.config.link.split('@')[0]
+    this.config.link2 = this.config.link.split('@')[1]
+    this.config.link3 = this.config.link.split('@')[2]
+    this.config.link4 = this.config.link.split('@')[3]
+  },
+  methods: {
+    copyLink() {
+      wx.setClipboardData({
+        data: this.config.link
+      })
+    },
+  },
+  onShareAppMessage() {
+    return {
+      // 标题是话题标题
+      title: this.config.share_title,
+      // 路径为话题详情路径
+      path: '/pages/users/get-user',
+      // 图片为用户头像
+      imageUrl: API_URL.split('/api/v')[0] + '/storage/' + this.config.share_img
+    }
+  }
+})
+</script>

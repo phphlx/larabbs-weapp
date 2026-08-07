@@ -96,6 +96,30 @@
             </div>
             <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </a>
+          <a class="weui-cell weui-cell_access" url="/pages/users/get-user">
+            <div class="weui-cell__bd">
+              <div>get-user</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+          <a class="weui-cell weui-cell_access" url="/pages/users/ai">
+            <div class="weui-cell__bd">
+              <div>AI</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+          <a class="weui-cell weui-cell_access" url="/pages/users/aibroadcast">
+            <div class="weui-cell__bd">
+              <div>AIbroadcast</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
+          <a class="weui-cell weui-cell_access" url="/pages/users/private">
+            <div class="weui-cell__bd">
+              <div>private</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </a>
         </div>
         <div v-if="isLoggedIn">
           <a class="weui-cell weui-cell_access" url="/pages/tools/time">
